@@ -1,17 +1,22 @@
-// Javascript  - can run on browser, client side scripting
+// Javascript  - can run on browser, client side scripting (console is a small run time environment.)
 //             - dynamic interpreted language
 //             - processing language like(php, python(flask or django framework))
-//             - but what about server side, servers doesn’t run on browser use nodejs
+//             - but what about server side, servers doesn’t run on browser, use nodejs-> allows you to run JavaScript on the server.(run time env for server side), and express built on top of it.
 //             - safe language(privacy protection, ensured by community)
-//             - write < script > just above body so that document gets ready till  script comes
+//             - write < script > just above body so that document gets ready till  script comes-> can be inline else need to load another script file
 // 	           - can be written within html or a separate .js file
-//             - ecma script - maintain standard while updating js
+//             - ecma script - maintain standard while updating js, ES5, ES6(2015),...(EVERY YEAR)
 // JSON - JavaScript Object Notation - light weight data-interchange format, 
 //                                  easy for humans to read and write , and for machine to parse 
 //                                     
 // doesnt accept single quote
 
+// not hard and fast rule but script if inline below style, if seperate then at the end of body
+//cmd+k to clear terminal
+// how to run on browser
+cmd+opt+j or inspect->console or ctr+shift+j or view -> developer-> js console
 //1. javascript console API - ways to print
+alert("hi");
 console.log("namaste duniya");
 console.warn("warning");
 console.error("error");
