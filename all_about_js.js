@@ -15,6 +15,11 @@
 //cmd+k to clear terminal
 // how to run on browser
 cmd+opt+j or inspect->console or ctr+shift+j or view -> developer-> js console
+
+// to change tabs
+ctr+tab, to reverse press it together with shift
+//to change applications
+cmd+tab , to reverse shift as well , shift can also be denoted as up arrow
 //1. javascript console API - ways to print
 alert("hi");
 console.log("namaste duniya");
@@ -29,6 +34,8 @@ console.log("hi ", 4 + 3, "bye");
 document.write("this is my document");
 
 //2. javascript variables - containers to store data value
+//variables can't start with numbers,reserved keywords(exception - name works even though reserved),special characted, , only _ a-z A-Z $ 
+// variable names -> all upper case for constant PI, else camelCase, should be descriptive and self explanatory like job1, job2 bad firstJob, secondJob good
 var number1=34
 //3 data types in js - primitive bool,symbol,string,undefined,null,number , reference - object , array
 //number
