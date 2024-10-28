@@ -37,16 +37,31 @@ document.write("this is my document");
 //variables can't start with numbers,reserved keywords(exception - name works even though reserved),special characted, , only _ a-z A-Z $ 
 // variable names -> all upper case for constant PI, else camelCase, should be descriptive and self explanatory like job1, job2 bad firstJob, secondJob good
 var number1=34
-//3 data types in js - primitive bool,symbol,string,undefined,null,number , reference - object , array
-//number
+//2 data types in js - primitive or object
+// js has dynamic typing - no need to explicitly or manually write datatype ,can be done automatically , why? since in js value has type not the variable
+//use x=10, later x="drg" -> good but hard to find bug
+//primitive 7 types - bool,symbol,string,undefined,null,number,bigint 
+//number - decimals or integers
 
 var number2=6
 console.log(number1+number2);
 
-//string
+//string - double or single quotes 
 var str1 = "this is a string"
 var str2 = 'this is a string'
 console.log(str1+" "+str2);
+
+//bool - can  be only true or false
+let fullAge = true;
+
+//null - means empty
+
+//undefined - value taken by variable not defined
+let children;
+
+// symbol - value that is unique and cannot be changed
+
+//bigint - so large that no.cant handel
 
 // object
 var marks = {
