@@ -63,6 +63,10 @@ let children;
 
 //bigint - so large that no.cant handel
 
+console.log(typeof 'hi');// string
+console.log(typeof true);// boolean
+console.log(typeof null); // bug, null is not an object
+
 // object
 var marks = {
     ravi :24,
