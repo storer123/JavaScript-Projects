@@ -1,5 +1,10 @@
 //In JavaScript, let is generally preferred over var for several reasons:
 
+4 types ofvariable decleration
+->let x //best
+-> var x // only learn to understand legacy system
+->const x // for stuffs that doesn't change
+-> x // updates global variable , so a terrible idea to use it
 //Block Scope: let is block-scoped, meaning it is only accessible within the block it is defined in (e.g., within a loop or an if statement). In contrast, var is function-scoped, which can lead to unexpected behavior if you try to use it outside the block where it was defined.
 
 if (true) {
