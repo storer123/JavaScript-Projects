@@ -42,7 +42,8 @@ var number1=34
 //use x=10, later x="drg" -> good but hard to find bug
 //primitive 7 types - bool,symbol,string,undefined,null,number,bigint 
 //number - decimals or integers
-
+// NaN - not a number, typeof NaN = number, Number("jhon")= NaN
+// white value in console is string and other color like purple is number
 var number2=6
 console.log(number1+number2);
 
@@ -102,7 +103,8 @@ number1=4;
 number2=3;
 //arithmetic -%,/,*,+,-
 console.log(number1%number2)
-
+const result = Math.ceil(5 / 2);
+console.log(result); // Output: 3
 //assignment
 number1=number2;
 number1+=2;
@@ -119,6 +121,40 @@ console.log(!true)
 
 console.clear();
 
+//4.2 strings vs template literal (from e6 onwards, easier)
+//string
+const str = "I'm " + name + '\n my age is ' + age;
+//template literal  - jss ke tass likh dena
+const str = `I'm ${name} 
+my age is ${age}`
+
+//4.3 Type conversion(manual/explicitly) type coersion (automaticlly/implicitly)
+//conversion
+//String to Number:
+let str = "123";
+let num = Number(str); // Converts string to number
+console.log(num); // 123
+//Number to String:
+let num = 123;
+let str = String(num); // Converts number to string
+console.log(str); // "123"
+//Boolean Conversion:
+let truthyValue = "Hello";
+let boolValue = Boolean(truthyValue); // Converts to boolean
+console.log(boolValue); // true
+
+// coersion
+//String and Number:
+let result = "5" + 1; // Implicitly converts number to string
+console.log(result); // "51" (string concatenation)
+let result = "5" - 1; // Implicitly converts string TO NUMBER
+console.log(result); // 4 (string concatenation)
+//Boolean in Arithmetic Context:
+let sum = 5 + true; // true is coerced to 1
+console.log(sum); // 6
+//Comparisons:
+console.log("2" == 2); // true, because "2" is coerced to a number
+console.log("2" === 2); // false, no coercion, types must match
 // 5 function
 function Avg(a, b=3){
     return (a+b)/2.0;
