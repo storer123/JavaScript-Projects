@@ -5,7 +5,10 @@
 //             - safe language(privacy protection, ensured by community)
 //             - write < script > just above body so that document gets ready till  script comes-> can be inline else need to load another script file
 // 	           - can be written within html or a separate .js file
-//             - ecma script - maintain standard while updating js, ES5, ES6(2015),...(EVERY YEAR)
+//             - ECMA Script - maintain standard while updating js, ES5, ES6(2015),...(EVERY YEAR),   ES6+ SINCE FORM ES6 ALL ARE MOSTLY COMPATIBLE IN MOST BROWSER, ESNEXT ->2021+ not even a part of enigma script but people start using it
+//             - All of these versions are backward compatible-> why ? concept of not breaking the web i.i. things are iteratively added in newer version not break and build like other languages? why to make it so that even olderwebsite made in say 2008 still exist and work
+//             - but not forward compatible, that is say 2020's code run on 2008;s browser, that wont work
+//             - after development during production ,bable to transpile and polyfill code - since users browser might not be up to date, and forward compatiblity is required
 // JSON - JavaScript Object Notation - light weight data-interchange format, 
 //                                  easy for humans to read and write , and for machine to parse 
 //                                     
@@ -20,6 +23,20 @@ cmd+opt+j or inspect->console or ctr+shift+j or view -> developer-> js console
 ctr+tab, to reverse press it together with shift
 //to change applications
 cmd+tab , to reverse shift as well , shift can also be denoted as up arrow
+
+// expression is a piece if cide that produces a value
+a>=b?"yes":"no";
+3+4
+a&&b
+// statement - bigger piece of code that is executed, and does not produce a value by itself
+if(a&&b){
+ console.log("statement vs expression");
+}
+//or
+let a= "statement vs expression";  // herer the string part is expression but this whole line is statement
+
+//in template literal , can only insert expression , not statement
+
 //1. javascript console API - ways to print
 alert("hi");
 console.log("namaste duniya");
@@ -112,7 +129,7 @@ console.log(number1);
 
 // comparison
 //== >=,<=,>,< // true and fals
-
+// loose == , strict ==, loose !=, strict !==,   loose can follow type coersion
 //logical operator
 console.log(true && false)
 console.log(true || 1)
@@ -147,7 +164,10 @@ console.log(boolValue); // true
 //String and Number:
 let result = "5" + 1; // Implicitly converts number to string
 console.log(result); // "51" (string concatenation)
-let result = "5" - 1; // Implicitly converts string TO NUMBER
+let result = "5" - 1; // Implicitly converts string TO NUMBER   SAME FOR * AND /
+2+3+5+'5' ===== '95'
+'10'-'4' == 6
+10-11-'2'+'3' === '-33'
 console.log(result); // 4 (string concatenation)
 //Boolean in Arithmetic Context:
 let sum = 5 + true; // true is coerced to 1
@@ -155,7 +175,26 @@ console.log(sum); // 6
 //Comparisons:
 console.log("2" == 2); // true, because "2" is coerced to a number
 console.log("2" === 2); // false, no coercion, types must match
+
+//4.4 falsey and truthly
+falsley :  false, 0 ,NaN, ''(EMPTY STRING), null, undefined , //after conversion these change to false all others true , all 
+even empty obj Boolean({})====true (since not included in above)
+
 // 5 function
+
+//5.0 strict mode 
+/*Using "use strict"; is a best practice that can help you write cleaner, more robust, and more maintainable JavaScript code by enforcing stricter parsing and error handling on your code. It’s generally recommended to use strict mode, especially in larger codebases or when working in teams.*/
+Catches Errors: Converts silent errors into throw errors, making bugs easier to spot.
+
+Prevents Globals: Disallows accidental creation of global variables by throwing errors for undeclared variables.
+
+No Duplicate Parameters: Prevents function parameters from having the same name, reducing confusion.
+
+Disallows Problematic Syntax: Bans certain syntax (like with and eval) that can lead to errors.
+
+Improves Performance: Some engines optimize code better in strict mode.
+
+Changes this Behavior: In strict mode, this is undefined in non-method functions, preventing unintentional global access.
 function Avg(a, b=3){
     return (a+b)/2.0;
 }
@@ -179,6 +218,21 @@ if(x>3){
 else if(x==3) console.log("hoo");
 else console.log("hui");
  
+let day='monday'
+
+switch{
+    case 'monday: // day=== monday (strict)
+        console.log("hi");                    // since no break next case statement will also print
+    case 'tue':
+        console.log("hello");
+        break;
+    case 'wed':
+        console.log("woho");
+        break;
+    default : 
+        day=prompt("enter a valid day");  // will prompt the user to enter a valid day
+}
+
 // 7 loop
 var arr2 = [1,2,"hi",4,5]
 for(var i=0; i<arr2.length;i++){
