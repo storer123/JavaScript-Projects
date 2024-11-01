@@ -92,6 +92,42 @@ var marks = {
     har : 34.34
 }
 console.log(marks);
+// Object (jenerates a key-value, or key-property pair)
+//in arr [1,2,[3,4,5]] how we dont have name for each stuff, obj is more dynamic and semantic
+//obj literal syntax
+const mark = {
+  name: "evans",
+  age:1923-1913,
+  trophies : [1,2,3]
+  //function can be added in object, its called as object method
+  //+ here we need expression, decleration doesnt work here
+  fun : function (x) {
+   return this.age+x;
+  }
+}
+//in object unlike array , order of stuffs does not matter
+// for ordered data use array , else use object
+//they order themself alphabetically
+
+// to get data from object
+. notation
+.name
+[] bracket notation
+expression can be used
+let x="me"
+mark["na"+x];||mark.name
+
+or
+
+const proper = promt ("what property do you want to know?");//namer
+mark.proper//error
+mark[proper]// evans
+
+//to add new
+mark.locaton="japan"
+mark[location]="japan"
+this.location="japan"//if inside
+
 
 //booleans
 var a=true
@@ -109,11 +145,15 @@ var n=null
 console.log(n)
 
 
-//array - collection of diff type of data
+//array - collection of diff type of data (special type of object)
 var arr = [1,2,"hi",4,5]
 console.log(arr)
 console.log(arr[0])
 console.clear();
+const arra=["hg"]
+arra[0]="ko"  // can be changed even though const , since only primitive value are immutable
+// but cant change its structure
+arra=["hu","hh"] //error, will not work if const
 
 //4 operator
 number1=4;
@@ -181,6 +221,8 @@ falsley :  false, 0 ,NaN, ''(EMPTY STRING), null, undefined , //after conversion
 even empty obj Boolean({})====true (since not included in above)
 
 // 5 function
+// use let if you want to reassign else use const
+
 
 //5.0 strict mode 
 /*Using "use strict"; is a best practice that can help you write cleaner, more robust, and more maintainable JavaScript code by enforcing stricter parsing and error handling on your code. It’s generally recommended to use strict mode, especially in larger codebases or when working in teams.*/
@@ -195,13 +237,24 @@ Disallows Problematic Syntax: Bans certain syntax (like with and eval) that can 
 Improves Performance: Some engines optimize code better in strict mode.
 
 Changes this Behavior: In strict mode, this is undefined in non-method functions, preventing unintentional global access.
+
+let a = Avg(2); // will work
+//function decleration
 function Avg(a, b=3){
     return (a+b)/2.0;
 }
-//or arrow function
-fun = (a,b)=>{
+
+//function expression
+let a = Avg(2); // will not work
+const Avg = function(a,b=3){
     return (a+b)/2;
 }
+
+//or arrow function (also a function expression)   // in arrow function no need to write "function"
+const Avg = (a,b) => (a+b)/2; // in 1 liner no need of braces 
+console.log(Avg(2,3));
+VM3090:1 2.5
+
 
 c1=Avg(2);
 console.log(c1);
@@ -257,6 +310,8 @@ let myarr = ["Fan","Cam", 34, null, true];
 console.log(myarr.length);
 myarr.pop();//from back
 myarr.push("hi");
+myarr.include("hi");
+myarr.indexOf("hi");
 myarr.shift();//pop from front
 console.log(myarr);
 myarr.unshift("hy");//add from front
@@ -373,4 +428,8 @@ console.log(typeof jso);
 console.log(jso);
 parsed=JSON.parse( jso)
 console.log(parsed);
+
+
+
+
 
