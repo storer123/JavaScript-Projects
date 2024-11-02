@@ -339,8 +339,50 @@ console.log(mydate.getHours());
 console.log(mydate.getMinutes());
 
 //11 DOM manipulatin (document object model)
-//programming interface provided by browsers that allows JavaScript to interact with the HTML and XML documents. 
+//(API) application programming interface provided by browsers that allows JavaScript to interact with the HTML and XML documents. and manipulate them.
 //methods , ancestors ,html docs, etc
+// they are inline changes (changes will be made in html inline code, not in css)
+
+'use strict';
+//console.log('start guessing ...');
+// console.log(document.querySelector('.message').textContent);
+// document.querySelector('.guess').value = 3;
+
+const secret_number = Math.ceil(Math.random() * 20);
+let score = 20;
+document.querySelector('.number').textContent = secret_number;
+console.log(secret_number);
+document.querySelector('.check').addEventListener(
+  'click',
+  /*event handler function*/ function () {
+    const guess = document.querySelector('.guess').value;
+    console.log(guess);
+    if (score == 0) {
+      document.querySelector('.message').textContent = '🥹 You lost the game !';
+    } else {
+      if (!guess) {
+        document.querySelector('.message').textContent = '👹 No number';
+      } else if (Number(guess) === secret_number) {
+        document.querySelector('body').style.backgroundColor = '#60b347';
+        document.querySelector('.number').style.width = '30rem';
+        document.querySelector('.message').textContent =
+          '🎊 Congrats !!!, you WON.';
+        document.querySelector('.highscore').textContent =
+          document.querySelector('.score').textContent;
+        score++;
+      } else if (guess > secret_number)
+        document.querySelector('.message').textContent =
+          'Try again 😛, too high!';
+      else {
+        document.querySelector('.message').textContent =
+          'Try again 😛, too low!';
+      }
+      document.querySelector('.score').textContent = --score;
+    }
+  }
+);
+
+
 //document.location
 document.getElementById('click').style.color="red";
 document.getElementById('click').style.border="2px solid blue";
