@@ -473,5 +473,16 @@ console.log(parsed);
 
 
 
-
+////////////////////
+//16 . behindTheScene of js
+// earlier was and interpreter lang, now just-in-time compilation->  interpreter slow, compilation makes a portable object code for machine code, which can be executed any where,  jtc - enable to compile and run immediately , without making any portable file
+// jit compilation i.e. conversion to machine code happens inside the engince, ex- for google chrome - v8 engine
+// high level - cant access resources like memory directly, is human understandable
+// garbage collector is present (since high level)
+//paradigm - approach or mindset of structuring code , which directs coding style and technique
+// it is a multi-paradigm lang- 1. functionl PROGRAMMING 2. objected oriented programing 3. procedural programming (mixture)
+// or prototype based object oriented approach - almost everything is obj (except primitive datatype)
+// it is a lang with first class functions - i.e. functions are treated as variables, can be stored and passed as parameters
+// dynamic lang / dynamically typed lang - let x=10; x="ram"; (we dont assign datatypes to variable , they becomes known when its executed in an engine) (advantage - easy, disadvantage - dont make it easy to identify bugs) (opposite is called strongly typed language)
+//single threaded (handels one thing at a time) - so what if i/o or long running stuff , use event loop - make them run in background
 
