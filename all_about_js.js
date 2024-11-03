@@ -352,7 +352,7 @@ const secret_number = Math.ceil(Math.random() * 20);
 let score = 20;
 document.querySelector('.number').textContent = secret_number;
 console.log(secret_number);
-document.querySelector('.check').addEventListener(
+document.querySelector('.check').addEventListener(  /*enent handler and listner works the same way*/
   'click',
   /*event handler function*/ function () {
     const guess = document.querySelector('.guess').value;
@@ -411,10 +411,139 @@ console.log(document.scripts);
 
 //selecting using query
 
-sel= document.querySelector('.container');
+sel= document.querySelector('.container'); // only selects 1st that is available
 console.log(sel);
 sel= document.querySelectorAll('.container');
 console.log(sel);
+
+//11.2. manipulate classes with javascript
+// . is only for selecting classes, for add or remove no need of  .
+//sample
+'use strict';
+const modal = document.querySelector('.modal');
+const overlay = document.querySelector('.overlay');
+const btnCloseModal = document.querySelector('.close-modal');
+console.log(modal.textContent);
+const btnsOpenModal = document.querySelectorAll('.show-modal');
+console.log(btnsOpenModal);
+
+const openModal = () => {
+  modal.classList.remove('hidden');
+  overlay.classList.remove('hidden');
+};
+const closeModal = () => {
+  modal.classList.add('hidden');
+  overlay.classList.add('hidden');
+};
+
+for (let i = 0; i < btnsOpenModal.length; i++) {
+  btnsOpenModal[i].addEventListener('click', openModal);
+}
+
+btnCloseModal.addEventListener('click', closeModal);
+overlay.addEventListener('click', closeModal);
+
+document.addEventListener('keyup', function () {
+  // will be called automatically
+  console.log('a key was pressed');
+});
+document.addEventListener('keyup', function (e) {
+  //e - key which was pressed
+  console.log(e);
+  if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal(); //or code
+});
+
+//sample 2
+'use strict';
+//selecting elements
+const score0El = document.querySelector('#score--0');
+const score1El = document.getElementById('score--1');
+const curr0El = document.getElementById('current--0');
+const curr1El = document.getElementById('current--1');
+const diceEl = document.querySelector('.dice');
+const btnNew = document.querySelector('.btn--new');
+const btnRoll = document.querySelector('.btn--roll');
+const btnHold = document.querySelector('.btn--hold');
+const player0El = document.querySelector(`.player--0`).classList;
+const player1El = document.querySelector(`.player--1`).classList;
+
+let currScore, scores, activePlayer, playing;
+//initialization
+const init = () => {
+  scores = [0, 0];
+  currScore = 0;
+  score0El.textContent = 0;
+  score1El.textContent = 0;
+  curr0El.textContent = 0;
+  curr1El.textContent = 0;
+  activePlayer = 0;
+  playing = true;
+  diceEl.classList.add('hidden');
+  player0El.remove('player--winner');
+  player1El.remove('player--winner');
+  player0El.add('player--active');
+  player1El.remove('player--active');
+};
+init();
+// switching player
+const switchPlayer = () => {
+  document.getElementById(`current--${activePlayer}`).textContent = 0;
+  currScore = 0;
+  activePlayer ^= 1;
+  player0El.toggle('player--active'); // if class exist then remove , else add
+  player1El.toggle('player--active');
+};
+//rolling dice functionality
+btnRoll.addEventListener('click', function () {
+  if (playing) {
+    // roll dice / generate random no
+    const val = Math.ceil(Math.random() * 6);
+    //fisplay dice
+    //if (diceEl.classList.contains('hidden')) //not needed
+    diceEl.classList.remove('hidden');
+    diceEl.src = `dice-${val}.png`;
+    //operation
+    if (val !== 1) {
+      currScore += val;
+      document.getElementById(`current--${activePlayer}`).textContent =
+        currScore;
+      //add in current player's score
+    } else {
+      //display current score and change player
+      switchPlayer();
+    }
+  }
+});
+
+//hold functionality
+btnHold.addEventListener('click', function () {
+  if (playing) {
+    //shift current score to real score
+    scores[activePlayer] += currScore;
+    document.getElementById(`score--${activePlayer}`).textContent =
+      scores[activePlayer];
+    currScore = 0;
+    //check if activeplayers score>=10
+    if (scores[activePlayer] > 10) {
+      document
+        .querySelector(`.player--${activePlayer}`)
+        .classList.add('player--winner');
+      document
+        .querySelector(`.player--${activePlayer}`)
+        .classList.remove('player--active');
+      playing = false;
+    }
+
+    //display current score and change player
+    else switchPlayer();
+  }
+});
+
+btnNew.addEventListener('click', function () {
+  init();
+});
+
+
 
 // 12 JavaScript Event - any thing that is happening like moving of cursor, clicking buttons, hovering over buttons
 function clicked(){
@@ -477,6 +606,7 @@ console.log(parsed);
 //16 . behindTheScene of js
 // earlier was and interpreter lang, now just-in-time compilation->  interpreter slow, compilation makes a portable object code for machine code, which can be executed any where,  jtc - enable to compile and run immediately , without making any portable file
 // jit compilation i.e. conversion to machine code happens inside the engince, ex- for google chrome - v8 engine
+//js runtime in browser - consist of 1.engine consist of 2 parts - 1.1 call stack 1.2 heap, but they alone are not enough , even 2. API's are needed like dom, fetch, timer,  3. callback queue like 3.1 click (a call back functiopn from dom event listner) 3.2 timer 3.3 data when call back queue stuff is called it goes to call stack -> this happens using event loop 
 // high level - cant access resources like memory directly, is human understandable
 // garbage collector is present (since high level)
 //paradigm - approach or mindset of structuring code , which directs coding style and technique
@@ -485,4 +615,5 @@ console.log(parsed);
 // it is a lang with first class functions - i.e. functions are treated as variables, can be stored and passed as parameters
 // dynamic lang / dynamically typed lang - let x=10; x="ram"; (we dont assign datatypes to variable , they becomes known when its executed in an engine) (advantage - easy, disadvantage - dont make it easy to identify bugs) (opposite is called strongly typed language)
 //single threaded (handels one thing at a time) - so what if i/o or long running stuff , use event loop - make them run in background
+
 
