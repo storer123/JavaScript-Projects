@@ -616,4 +616,166 @@ console.log(parsed);
 // dynamic lang / dynamically typed lang - let x=10; x="ram"; (we dont assign datatypes to variable , they becomes known when its executed in an engine) (advantage - easy, disadvantage - dont make it easy to identify bugs) (opposite is called strongly typed language)
 //single threaded (handels one thing at a time) - so what if i/o or long running stuff , use event loop - make them run in background
 
+//EXECUTION CONTEXT - 
+//environment (like a box) in which js is executed, and which stores all the necessary info like variable environment(let const var declearation, function, arguments object), scope chain, this keyword, code(text) etc, of some code to be executed
+// we get 1 for all global variables, and 1 each for every functions, but then 100s of execution function for 100s of function, so how to keep track of function call order->soln call stack (why? beacuse js works on single thread)
+// arrow operator dont have -> this keyword, argument objects  ex function first [var1, var2 , arg[1,2,3..]], but arrow operator [var1, var2]
+//call stack is the place where execution context get stacked on top of each other to keep track of where in execution we are. lets say [[global, first(), sec() -> first called -> [[global, first()  whatever is at top is the active one, after first execute [[global -> when we close the browser even global is poped
+// scoping - where do variable live / how are they organized and accessed
+//in js lexical scoping - scoping controlled by placement of function and blocks in the code
+// scope : space or environment in which certain variables is declared. 1.global 2. function or local scope 3. block scope(es6+)-> (for strict mode - even a function itself is blocked scope, else function scope) only let and const are block scoped, var is function scoped ex if(werf){let a, const b,. var c};here var c is accesible, const and let a and b are not
+// for a function variable environment and scope is same
+// scope of variable : region in which our code where a certain variale can be accessed.
+//  scope chain -> every scope has acess to variables from its outer scope. parents variable can be accessed ex let a function f1(){if(){let d}let b functionf2 (){ letc} }   f1 can access a and b, f2 can acess a,b, and c i.e. scope has acess to variable from outer scope, but nothing can acess d apart form if statement, if and f2 are sibling scope not parent thus cant acess each other
+// variable lookup -> when a variable is noto in current scope , engine looks up for it in the scope chain until it finds, say fun1(){x++}; const x; fun1 doesnt find but later variable look up finds x in global scope
+
+// Hoistion - make some types of variables accessible/usable in the code before they are actually declared. " variables lifted to the top of their scope", but behind the scene -> before execution , code is scanned for variable declaration , for each variable, a new property is created in the variable environment object
+// function declearation - hoisted , initial value - actual function
+// var variables - hoisted , initial value - undefined
+// let and const - not hoisted (actually hoisted but), initial value uninitialized (so considered to be not hoisted) TDZ - Temporal Dead Zone (so we can't access before declared till declared)
+// function expression and arrow function - depend on created with var, let or const  // this is also the reason why we can't write function expression before declearation
+//Function declarations are hoisted, so you can call them before they appear in the code.
+//Function expressions are not hoisted in the same way; you need to define them before you can call them.
+// tdz- to make it easier to avoid and catch errors
+//makes const variable actually work (if changed earlier?)
+// if problems with hoisting why? 1. using function before declaration essential for some techniqes like  mutual recursion 2. var hoisting is just a byproduct (it was never intended to use this programming language for such large scale, and now it cant be removed)
+// beifit of hoisting (best practices)  1. used const whenever possible else let, always declaer functions first then use it
+if(!numProducts){ //undefined - if would have used const would have no issue
+ deleteCart();
+}
+var numProducts =10;
+function deleteCart(){
+ console.log("all products are deleted);
+}
+
+var x =2;  // will create a property in window object that can cause some complications
+console.log(x===window.x)
+
+// this keyword - special keyword that is created for every execution context (every function), points to owner function , not static, depend on how function is called, and only assigned when function is actually called
+//called like
+// method this = object that is calling the method
+// simple function call this = undefined in strict mode, else window object without it, in sloppy mode it will always become window object
+// arrow function this = this of surrounding function (lexical this) ** arrow function don't get own this
+// event listner this = dom element that the handler is attached to
+//(new , call, apply, bind)
+// this does not point to the function itself, and also not to the variable environment
+console.log(this);//undefined
+const calcAge = function(birthYear){
+console.log(2037-birthYear);
+console.log(this);// undefined
+}
+const calcAge = (birthYear)=>{
+console.log(2037-birthYear);
+console.log(this);// window (since doesn't own this/so of parent scope)
+}
+
+const jonas{
+ year:1991,
+ calcAge: function(){
+  console.log(this); // this/jonas object -> why since jonas is calling this function  // the below one will point to matilda
+  console.log(2037-this.year);
+ }
+}
+jonas.calcAge();
+
+// method borrowing
+const matilda = {
+ year:2017,
+}
+matilda.calcAge = jonas.calcAge;
+matilda.calcAge();
+
+const f=jonas.calcAge();
+f();  // since no owner , no this function , thus no error
+
+const jonas = {  // this is not a code block, so for greet function , its parent will be global scope  
+firstName
+ year:1991,
+ calcAge: function(){
+  console.log(this); // this/jonas object -> why since jonas is calling this function  // the below one will point to matilda
+  console.log(2037-this.year);
+ },
+ greet: () => console.log(`Hey ${this.firstName}`), // hey undefined , since arrow operator, no this, calls global this
+//solution 1 -> self  
+//solution self=this; // self or that to prevent this
+ const fun = function(){  // why? since it behaves same as a regular function decleration i.e. undefined, to solve it use self
+  console.log(this);//undefined  // self
+  console.log(this.year)//error, year of undefined?// self .year
+ }
+ fun();
+//solution 2 , will work since arrow operator desnt have there own this so will use its parent's this.
+const fun = ()=>{  // why? since it behaves same as a regular function decleration, to solve it use self
+  console.log(this);//this== jonas
+  console.log(this.year)
+ }
+ fun();
+}
+jonas.greet();
+
+// argument keyword only exist in regular function decleration and expression but not in arrow function, in arrow operator error
+const addExpr = function (a,b){
+    console.log(arguments);
+    return a+b;
+}
+undefined
+addExpr(2,3);
+
+Arguments(2) [2, 3, callee: ƒ, Symbol(Symbol.iterator): ƒ]
+5
+addExpr(2,3,4,5);
+VM3184:2 
+Arguments(4) [2, 3, 4, 5, callee: ƒ, Symbol(Symbol.iterator): ƒ]
+0: 2
+1: 3
+2: 4
+3: 5
+..;
+
+
+///// object (or reference type) vs premitive 
+// js engine -> 1. call stack where execution context or object run 2. heap where object is stored
+//primitive data type is stored in execution context
+//primitive - number, bigint, string, boolean, undefined, null, symbol
+// object - object literals, function, arrays, etc
+              // in stack
+let age =30;  // address - 0001 value - 30
+let oldAge=age; // address - 0001 value - 30 (points to same address)
+age = 31;  // address - 0002 value - 30 (points to different address) (value at an address is immutable)
+
+//but for non premitive its same as call by reference
+// call stack   // heap
+// address - 0003 value - D304  /// address - D304 value -  { name: "mona", age: 20; }
+const me = {
+  name: "mona",
+  age: 20;
+}
+//(FRIEND POINTS TO SAME ADDRESS)
+const friend = me; // address - 0003 value - D304  /// address - D304 value -  { name: "mona", age: 20; }
+// Doesnt create new in stack but goes to the place pointing in heap and change that 
+// thus 1. change visible to all (new name not new object)
+//2.  thus we are able to change const object as its value in call stack remains the same
+me.age=27;  // changes in both
+
+// but we dont want that, we want to create a new copy/object
+// we can do shallow copy, deep copy
+// shallow copy
+
+const meCopy = Object.assign({},me); //combines but friend 2 will get a new copy
+//now changing, me or friend2 wont change the other one but a new copy will be created
+// a new example for shallow and deep copy
+// as shallow copy will fail for object inside object
+
+const me = {
+  name: "mona",
+  age: 20;
+  family: ["alice", "bob"],
+}
+
+const meCopy = Object.assign({},me); // shallow copy
+meCopy.family.push("mary")
+both me and meCopy family got changed 
+
+//deep copy
+//will do using external library later
+
 
