@@ -180,3 +180,122 @@ for(const item of menu.entries())console.log(item[0],item[1]);
 
 // destructure it
 for(const [i,el] of menu.entries())console.log(i,iel);
+
+//enhanced object literal (object literal, when we literally write object using curly braces)
+arr = [ab,bc]
+const obje = {
+  [arr[0]]:{   // enhanced way to write property
+    open:12,
+    close:22,
+  },
+  [arr[1]]:{
+    open:12,
+    close:22,
+  },
+};
+
+const rest ={
+  name:"fg",
+  star:3,
+  obje, // ES6 enhanced object literal
+  fun : function(a){} // old way
+  fun(a){} //new way
+};
+
+
+//optional chaining
+// say for some restaurant openingHrs may not exist , if it does mon (monday may not exist)
+if(restaurant.openingHrs && restaurant.openingHrs.mon){  // to not get an error
+  console.log(restaurant.openingHrs.mon.open)
+}
+//optional chaining ?.
+// if it exisit ,opening hour can also be 0 so we cant use or, so nullish coalation operator ?? to be used as or instead
+console.log(restaurant.openingHrs?.mon?.open ?? "closed")//->if the whole thing exist(not nullish) get it .open else return undefined (not error)
+
+//option chaining on method
+console.log(restaurant.fun2?.(1,2)??"fun2 does not exisit");
+//array
+console.log(user[0]?.name ?? "user array empty");
+
+
+// looping objects
+//looping over property names/keys
+const properties = Object.keys(openingHrs);
+for(const day of Object.keys(openingHrs)){cl(day)};
+//property value
+const values = Objects.values(openingHrs);
+cl(values);
+// entire object
+const entries = Object.entries(openingHrs);
+
+for (const [key, value] of entries){}
+
+// set
+//collection of unique values
+
+const orderSet = new Set(["hi", "hello","hi","hi","who"])
+Set(3) {'hi', 'hello', 'who'}
+0: "hi"
+1: "hello"
+2: "who"
+orderSet.add/delete /(to remove all) clear /size
+no way to get data out of set
+
+if you want them in array
+const uniqeArr = [... new Set(staff)];
+
+//maps
+const rest = new Map();
+rest.set("name":"classico futo");
+rest.set(1:"classico futo  1");
+rest.set(2:["classico futo 2","and many more"]);
+rest.set(true,"we are open").set(false,"we are closed");
+
+rest.get("name");
+rest.set("open":11).set("close",23);
+rest.get(time>rest.get("open") && time<rest.get("close"));
+rest . set/get/has/delete(key)/clear/size
+
+rest.set([1, 2]: "hi");
+rest.get([1, 2]) // it won't work as [1, 2] points to different place
+// to make it point to same heap
+const arr=[1, 2];
+rest.set(arr: "hi");
+rest.get(arr)
+
+// another way
+const quest = new Map({
+  ['question',"which programming lang"],
+  [1,"C++"],
+  [2,"javaScript"],
+  ["correct",3]
+});
+
+//(this is array of arra, isnt it same as Object.entries)
+const hrsMap=new Map(Object.entries(openingHours));
+
+for(const [key,value] of question ){
+  if(typeof key==='number')
+  console.log(key,value);
+}
+
+// map to array
+cl([...quest]);
+cl(quest.key()/values());
+
+// when to use whihc ds
+// source of data
+// 1. from program itself 2. from external sources like api's 3. from ui - data input by user or from DOM
+//4 BUILT IN DS IN JS
+//SIMPLE LIST -> ARRAY OR SET 
+//ARRAY-> WHEN WE NEED TO MANIPULATE DATA, WHEN WE NEED ORDERED AND DUPLICATE DATA,
+//SET -> WHEN NO MANIPULATIO0N, HIGH PERFORMANCE, AND UNIQUE DATA
+// KEY/VALUE PAIR -> OBJECTS OR MAPS 
+//MAPS-> BETTER PERFORMANCE, SIMPLE KEY/VALUE, KEYS THAT ARE NOT STRING
+//OBJECTS -> NEED TO INCLUDE FUNCTION , WHEN WORKING WITH JSON
+
+for(let [time,event] of gameEvents)
+        console.log(`[${time > 45 ?"[SECOND HALF]": "[FIRST HALF]"}] : ${event}`);
+
+const events = [...new Set(gameEvents.values())];
+console.log(events);
