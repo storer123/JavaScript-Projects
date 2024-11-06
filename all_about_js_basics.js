@@ -185,6 +185,8 @@ const str = "I'm " + name + '\n my age is ' + age;
 const str = `I'm ${name} 
 my age is ${age}`
 
+
+
 //4.3 Type conversion(manual/explicitly) type coersion (automaticlly/implicitly)
 //conversion
 //String to Number:
@@ -328,6 +330,40 @@ console.log(mystr.indexOf("is"));//4 1st occurence
 console.log(mystr.lastIndexOf("a"));
 console.log(mystr.slice(0,3));
 console.log(mystr.replace("Ram","Shyam"));//only replaces 1st occurence
+// either replaceall() or using regular expression
+console.log(mystr.replace(/Ram/g,"Shyam"));
+.startsWith();// words need not match , starting charecters should
+.endsWith()
+.includes() // if matches anywhere
+srt[0];
+str.indexOf('m');
+str.lastIndexOf('m');
+str.slice(4,7)//begin from index 4
+str.slice(str.lastIndexOf(' ');,7)
+str.slice(1,-2); from 1 to last 2ndth
+// WHEN A METHOD IS CALLED ON STRING IT BECOMES AN OBJECT , THEN AFTER THAT AGAIN BECOMES A STRING
+const passenger = "jONasS mAndela   !";
+const pass=(str[0].toLocaleUpperCase() + str.slice(1).toLowerCase()).trim();
+//oppposite of split is join
+arr.join(" ") //(with space)
+
+// example of split and join
+const capitalize = function (name){
+  const names =  name.split(" ");
+ const upperName = [];
+ for(const n of names){
+  upperNames.push(n[0].toUpperCase()+n.slice(1));
+  //or
+  upperNames.push(n.replace(n[0],n[0].toUpperCase()))
+ }
+ console.log(upperName.join(" "));
+}
+//padding
+let message = "hi, how are you";
+console.log(message.padStart(25,"+").padEnd(35,"-"))// make padding so that total length of string is 25, and pad with a "+", and 10 "-" as 25 already done
+//repeat
+message.repeat(3)//message will be repeated 3 times
+
 
 //10 date and there methods in js
 let mydate =new  Date();
