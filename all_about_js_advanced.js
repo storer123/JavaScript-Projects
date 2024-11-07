@@ -299,3 +299,180 @@ for(let [time,event] of gameEvents)
 
 const events = [...new Set(gameEvents.values())];
 console.log(events);
+
+@@@@@@@@@@@@
+// passing a primitive data type is same as
+const a = b;
+//the one which changes will point to main memory
+//passing a non-primitive (object, array , etc) is same as passing by reference
+const obj1=obj2
+//change in one will affect the other as both points to the same thing
+// in reality js only has pas by reference -> do refer the heap and stuff
+
+// in js functions are first class function - i.e. they are treated as(a type of objects or) values
+//its just a concept , not that it practically exist
+//which enables to use higher order function-> a function that returns function or a function whose parameter is a function
+const upperFirstWord(){
+  const [first,...other] = str.split();//rest
+  return []first.toupperCase(),...other].join(" ");//spread
+}
+
+const fun = function(str,func){func.name;// method for function -> bind, name, etc (since its also treated like value)};//higher order function
+
+const greet = function (greeting){
+  return function(name){               // if not declared how is it working (due to clouser)
+    console.log(`${greeting} ${name}`);
+  };
+};
+
+const greetHey = greet("Hey);
+greetHey('Jonas'); 
+//OR
+greet("Hey")("Jonas");
+
+// with arrow function
+const greet = (greeting)=> (name)=> console.log(`${greeting} ${name}`  ;                            
+                              
+// to make this function point to certaing stuff, we can use call method of a function
+const fun=SomeObj.fun;//that fun will containg this.x, this.y;
+fun(x,y)// error , since normal function has no this/ undefined
+fun.call(jonas,x,y)// correct as this = jonas now
+                               //apply same thing but instead of original argument it is takes array
+const arr = [x,y]
+fun.apply(jonas,arr);
+
+//call / apply/ se better-> bind  // instead of again and again call or apply use bind once and use many times
+const funJonas= fun.bind(jonas);
+funJonas(x,y);
+or
+const funJonas= fun.bind(jonas,x); // partial application -> part of parameter is already defined
+funJonas(y);
+//if this not needed but partial application neede
+const addVAT= addTax/*normal function*/.bind(null,0.1);
+
+// bind use 1. to bind this to an object once and for all, 2. partial application ,  3.with event listners
+// in case of evnt listner , this key word points to the element it is attached to,(means that the function which will be called inside event listner will call the element like <p>sfghry</p>)
+ // toprevent tat use bind
+addEventListner('click',jonas.fun.bind(jonas));                              
+                               
+//Immideately Invoked Function Expression (IIFE)
+// A FUNCTION THAT ONLY RUN ONCE USED IN ASYNC AWAIT
+const runOnce = function(){
+  console.log("this will run again");
+};
+(function(){
+  console.log("this will never run again");
+})(); //()to call it in inner scope , which wont give its access to parent as it works the other way around
+(()=>{
+  console.log("this will never run again");
+})(); //()to call it in inner scope , which wont give its access to parent as it works the other way around
+                             
+//() create a seperate scope
+//variables defined with let and const also creates their own scope
+{const isPrivate=23;
+var notPrivate=43;}                     
+
+// CLOUSERS
+// closure happens automatically , not explicitally creaetd
+
+const secureBooking = function(){
+  let passenger = 0;
+  return function(){
+    pasengerCount++;
+    coonsole.log(`${passengerCount} passengers`);
+  };
+};
+const booker = secureBooking();
+
+booker(); // passengerCount =1
+booker();// passengerCount =2
+booker();// passengerCount =3
+//how? isnt let scope internal-> EC of secure booking should be lost(out of call stack once a called as it goes to heap), so how come variable remains same
+// solution , why -> clouser
+
+secure booking EC -> below+ variable env(passengerCount=0)
+global execution context -> secure booking<f>
+call stack
+  |
+  | later
+  v
+booker() EC -> below+ variable env of execution context in which it was created(passengerCount=0,1,2..)
+global execution context -> secure booking<f>
+call stack
+
+(closure magically keeps having access to variables which shouldno linger exist)
+clouser - VE variable environment attached to the function, exactly as it was at time and place the function was created
+// clouser has priority over scope chain (thus let passenger count became secondary as it already had one in its clouser)
+
+a clouser is the closed-over variable environment of the execution context in which a function was created, even after that execution context is gone;
+     or
+a clouser gives a function access to all the variables of its parent function, even after that parent function has returned. The function keeps a reference to its outer scope, which preserves the scope chain throughout time.
+  or
+a clouser makes sure that a function doesnt loose connection to variables that existed at function's birth place;
+
+//example 1
+
+let f;
+
+const g=function(){
+  const a=20;
+  f= function(){console.log(a*2);}
+};
+const h=function(){
+  const b=30;
+  f= function(){console.log(b*2);}
+};
+
+g();
+f(); -> console.dir(f)   -> clouser a=20
+
+//re-assigning f function
+h();
+f(); -> console.dir(f)   -> clouser b=30 (no a here, it vanished when the clouser part changed)
+                               
+ // example 2
+const boardPassengers = function(n,wait){
+  const perGroup = n/3;
+  setTimeout(function(){
+    console.log(`we are now boarding all ${n} passengers`);
+    console.log(`There are 3 groups , ech with ${perGroup} passengers`);
+  },wait*1000);//to convert in millisec
+  console.log(`will start boarding in ${wait} seconds`);
+};
+const perGroup =1000; // it wont take this perGroup showing cluser takes priority over scope chaining
+boardpassengers(180,3); 
+//boardPassengers will be called executed and finished, after that setTimeout function will work taking varuables using clouser
+
+//example 3
+// event listner will work and access h1 part thats shouldn't be in memory , just like setTimeout
+let a;
+(function(){
+    const header = document.querySelector('h1');
+    header.style.color ='red';
+    
+    document.querySelector('body').addEventListener("click",function(){ // clouser, will use later but will still work
+        header.style.color='blue';
+    })
+})();
+
+
+//Arrays-Bankist
+//why do array have methods because they are objects, methods are function attached to methods
+//arr.slice
+to create a shallow copy for array
+console.log(...arr)
+or
+console.log(arr.slice()); // but with slice we can also chain other methods , does not mutate 
+// splice
+arr.splice // mutates the array -> the one it chooses gets removed from arr
+arr.splice(1,3) from 1 delete 3 elements
+arr.reverse() // it also mutates the array
+const a=arr.concat(arr2);
+or
+const a= [...arr,...arr2];m      
+//join
+const str=arr.join("-");
+//push, unshift, indexOf, pop,includes, etc
+
+arr[0] vs arr.at(0)
+for method chaing at method is useful, lets say for last value arr[arr.length-1] or arr.slice(-1)[0] or arr.at(-1)
