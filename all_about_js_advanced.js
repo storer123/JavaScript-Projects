@@ -476,3 +476,163 @@ const str=arr.join("-");
 
 arr[0] vs arr.at(0)
 for method chaing at method is useful, lets say for last value arr[arr.length-1] or arr.slice(-1)[0] or arr.at(-1)
+
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+/////////////////////////////////////////////////
+// for of
+for(const [i,movement] of movements.entries()){
+  if(movement>0){
+    console.log(`you deposited ${movement}`);
+  }
+  else{
+    console.log(`you withdrew ${Math.abs(movement)}`);
+  }
+}
+//forEach - executes a provided function once for each element in an array.
+//Cannot use break, continue, or return
+//Does not support async/await 
+//Performance	Generally slower for large arrays compared to for...of
+movements.forEach(function(movement,i,array) { // we can use all three or none
+  if(movement>0){
+    console.log(`${i+1}. you deposited ${movement}`);
+  }
+  else{
+    console.log(`${i+1}. you withdrew ${Math.abs(movement)}`);
+  }
+  console.log(array);
+});
+// for map and set
+currencies.forEach(function(value,key,map){
+  console.log(value,key,map);
+})
+currenciesUnique.forEach(function(value,key,map){// in set key == value , but signature like this is a must
+  console.log(value,key,map);
+})
+
+so instead of key for set use "_" -> which represen a throw away variable 
+
+
+
+
+//*Bankist array part*
+textcontent -> only content but insertAdjacentHTML-> TO INSERT HTML AND ineerhtml-> whole html
+
+
+// data transformation with , map filter and reduce
+// map - similar to forEach , but creates a new array, maps the value of original array to a new array (applying some operation of data of old array to new array
+// fi;lter - only elements that pass the test will get in new array, others get filtered
+// reduce-> boils/reduce all array element down to a  single value (using accumulatr)
+// map method
+const newmovements=movements.map(function(mov){return mov * 2}); // new array will be created
+//or
+const newmovements=movements.map((mov)mov * 2);
+const createUsernames = function(accs){
+  accs.forEach(function(acc){
+    acc.usernames=acc.owner.toLowerCase().split(" ").map((name)=> name[0]).join("");
+  })
+}
+
+//filter
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+const deposit = movements.filter(function(mov){return mov>0;});
+console.log(deposit);
+//array.filter(callback(currentValue, index, array))
+
+//reduce
+const balance = movements.reduce(function(acc/*accumulate - remains */, cur, i,arr){
+  return acc+cur;
+},0/*initial value of accumulator */);
+console.log(balance);
+//example
+const calcDisplaySummary = function(movements){
+  const income = movements.filter((mov)=>mov>0).reduce((acc,cur) =>acc+cur,0);
+  labelSumIn.textContent=`${income}`;
+  const expenditure = movements.filter((mov)=>mov<0).reduce((acc,cur)=>acc+cur,0);
+  labelSumOut.textContent=`${Math.abs(expenditure)}`;
+  const interest=movements.filter(mov => mov>0).map(deposit => deposit*1.2/100).filter((int, i, arr)=>{
+    return int>=1;
+  }).reduce((acc,cur)=>acc+cur);
+  labelSumInterest.textContent=`${interest}`
+};
+calcDisplaySummary(account1.movements);
+
+// avoid chaining as it reduces performance
+// dont chain with methods thatmutate array like splice or reverse
+
+
+// find method , to find one element based on certain conditions
+const firstWithdrawal=methods.find(mov=> mov<0); //will return the first instance where given condition is true
+//const account = accounts.find(acc=>acc.owner==="Jessica Davis");
+//console.log(account);
+btnTransfer.addEventListener("click",function(e){
+  e.preventDefault();// to prevent form submission, which in turn refreshes the page
+  const amount = Number(inputTransferAmount.value);
+  const inputTransferToWhom=inputTransferTo.value;
+  const recieverAccount = accounts.find((acc) => acc.username === inputTransferTo.value);
+  console.log(amount,recieverAccount);
+});
+
+// findIndex -> insted of indexOf -> we can create complex conditions to check from
+btnClose.addEventListener("click",function(e){
+  e.preventDefault();
+  const currentAccountIndex = accounts.findIndex((acc) =>  {return acc.username === inputCloseUsername.value && acc.pin ===  Number(inputClosePin.value)});
+  if(currentAccountIndex>=0){
+    console.log( accounts.splice(currentAccountIndex,1));
+  }
+  console.log(accounts);
+});
+//some and includes
+  //includes work for equality, some works like if something satishfying this condition exist
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+console.log(movements.includes(450),movements.indexOf(450)>=0,movements.findIndex(cur=>cur===450)>=0),movements.some(mov=>mov===450));
+const anyDepositGrTh400 = movements.some(mov=>mov>400); // mov=>mov===450
+console.log(anyDepositGrTh400);
+ // every method// only if all elements pass the test it is true
+  console.log(movements.every(mov=>mov>0));
+
+// flat method
+const arr1levelnesting = [[1,2,3],4,5,[6,7]]
+arr1levelnesting.flat(); [1,2,3,4,5,6,7]
+const arr1levelnesting = [[1,[2],3],4,5,[[6],7]]
+arr1levelnesting.flat(2); [1,2,3,4,5,6,7] ->> no of levels deep
+
+const accountMovements = accounts.map(acc=> acc.movements).flat();
+  
+// since its common
+//we use flatmap
+accounts.flatmap(acc=> acc.movements);
+
+// sort -> mutates the array
+//else return >0 b,a
+movements.sort((a,b)=> {  // or return a-b;
+    if(a>=b)return 1;
+    return -1;
+});
+console.log(movements);
+
+//array some hidden new behaviour
+const arr= new array(4) // will not create [4] but [,,,] -> exception if only 1 element
+but new array (4,5)// [4,5]
+
+//now how to fill that empty array , even works with pre filled array
+//fill method -> mutates
+  arr.fill(2)// entire arrwith 2 [2,2,2,2]
+  arr.fill(2,startindex,endindex)
+
+// better to use below this instead of new Array, then fill method
+//Array.from() not a method (Array not some object array)
+const y = Array.from({length:4},()=>1); //y=[1,1,1,1]
+const y = Array.from({length:4},(_,i)=>i+1); //y=[1,2,3,4]
+
+
+// it was created for iterables, to convert array from iterables
+// movement form UI
+
+//console.log( document.querySelector(".movements_value"));//we get a nodelist 
+labelBalance.addEventListener("click",function (){
+  const movementsUI = Array.from(document.querySelectorAll(".movements__value")).map((elemen=>elemen.textContent.replace("₹","")));
+  console.log(movementsUI);
+//or
+  const movementsUI2 = [...document.querySelectorAll(".movements__value")]//then map later , thus for this from was better
+});
