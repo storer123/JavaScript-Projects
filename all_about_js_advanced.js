@@ -636,3 +636,164 @@ labelBalance.addEventListener("click",function (){
 //or
   const movementsUI2 = [...document.querySelectorAll(".movements__value")]//then map later , thus for this from was better
 });
+// for removing some words for getting executed by the function
+//exception.includes(x)? x : x.fun();
+
+//in js
+0.1+0.2 !== 0.3 but === 0.300000000004 or something, issue since numbers are stored in binary form
+
+// to convert to a number
+console.log(Number("23"));
+console.log(+"23"); // better as cleaner
+//parsing -> only if the number is at first, or after blank space or \n etc
+console.log(Number.parseInt("\n 30.3sfd"));//30
+console.log(Number.parseFloat("\n 30.3sfd"));//30.3
+
+//checking if value is a number
+//check if value is a NaN
+console.log(Number.isNaN("20")); //false                          
+console.log(Number.isNaN(+"20"));   //false
+console.log(Number.isNaN(20));   //false
+console.log(Number.isNaN("xyz"));//false (some regular string ,but not -  not a number)
+console.log(Number.isNaN(20/0));      //false
+console.log(Number.isNaN(+"20rd"));   //true -> this is not a number (we are trying to convert to a number)
+console.log(Number.isNaN(+"dsfg"));  //true
+
+//is a proper number / finite
+console.log(Number.isFinite("20")); //false                          
+console.log(Number.isFinite(+"20"));   //true
+console.log(Number.isFinite(20));   //true
+console.log(Number.isFinite("xyz"));//false 
+console.log(Number.isFinite(20/3));      //true
+console.log(Number.isFinite(+"20rd"));   //false 
+console.log(Number.isFinite(+"dsfg"));  //false
+console.log(Number.isFinite(20/0));      //false -> since infinite
+
+// similarly isInteger
+console.log(Number.isFinite(+"20"));   //true
+console.log(Number.isFinite(20.0));   //false
+console.log(Number.isFinite(20/3));   //false
+
+// some mathematical functions -> all of these do type coersion
+Math.sqrt(4.5);
+//or
+4.5 ** (1/2);
+Math.max()//it can do type cohersion but not parsing
+Math.max(1,2,8,"4","9") ->9
+Math.max(1,2,8,"4px","9") ->NaN
+Math.PI();
+.min()
+.ceil()
+.floor()
+.trunc()
+.round()
+.random()
+.toFixed(0,1,2,3=>after decimal )-> will result in string with round
+5.45.toFixed(1)->"5.5"
++(5.45).toFixed(1)-> 5.5
+// a function to get number between min and max
+const rendomInt = (max,min)=> { Math.floor(Math.random()*(max-min+1)) + min };  //0..6 ->  2..8
+
+//numeratic seperators -> we can use it to enhance visiblity
+diameter = 345_354_556_000;
+//but 3._14 or 3_.14 not work
+//number("234_000")->NaN
+//IF PARSEINT ->234
+// ONLY 53/64 ARE USED FOR NUMBER -> 2^53-1 OR Number.MAX_SAFE_INTEGER
+console.log(324536765425346554354657534n)->bigInt
+or console.log(BigInt(324536765425346554354657534))-> but this one has low accuracy for large numbers, then why use this
+const huge = 12342564758643253n;
+const num = 2134
+console.log(huge * BigInt(num));
+console.log(20n === 20)->false
+console.log(20n == 20)-> true
+Math.sqrt(huge)->error
+console.log(20n/3)->error
+console.log(20n/3n) -> cuts of decimal part -> 6n
+console.log(20/3) -> 6.66667
+
+//create Date
+const now= new Date();
+console.log(now);
+console.log(new Date('aug 02 2020 18:05:41'));
+console.log(new Date("dec 24,2015"))// but unreliable
+console.log(new Date(2037, 9, 19, 15, 23 , 5));//year, month-1, date, hrs,minute, second
+//can also auto correct if wrong input
+console.log(new Date(0));//->from when it was created
+
+// Working with dates
+const future = new Date(2037, 10, 19, 15, 23);
+console.log(future);
+console.log(future.getFullYear()); // dont use getYear
+console.log(future.getMonth());
+console.log(future.getDate());
+console.log(future.getDay());
+console.log(future.getHours());
+console.log(future.getMinutes());
+console.log(future.getSeconds());
+console.log(future.toISOString());
+console.log(future.getTime());
+
+console.log(new Date(2142256980000));// based on milli second
+
+console.log(Date.now());
+
+future.setFullYear(2040); // can use set before thhe above to set dates
+console.log(future);
+
+
+///////////////////////////////////////
+// Operations With Dates
+const future = new Date(2037, 10, 19, 15, 23);
+console.log(+future);//-> convert to milli sec
+
+const calcDaysPassed = (date1, date2) =>
+  Math.abs(date2 - date1) / (1000 * 60 * 60 * 24);
+
+const days1 = calcDaysPassed(new Date(2037, 3, 4), new Date(2037, 3, 14));
+console.log(days1);
+
+
+///////////////////////////////////////
+// Internationalizing Numbers (Intl)
+// to get local code from system and not standard time
+const locale = navigator.langyage;
+console.log(locale);
+const num = 3884764.23;
+
+const options = {
+  style: 'currency',
+  unit: 'celsius',
+  currency: 'EUR',
+  // useGrouping: false,
+};
+
+console.log('US:      ', new Intl.NumberFormat('en-US', options).format(num));
+console.log('Germany: ', new Intl.NumberFormat('de-DE', options).format(num));
+console.log('Syria:   ', new Intl.NumberFormat('ar-SY', options).format(num));
+console.log(
+  navigator.language,
+  new Intl.NumberFormat(navigator.language, options).format(num)
+);
+
+
+///////////////////////////////////////
+// Timers
+
+// setTimeout
+const ingredients = ['olives', 'spinach'];
+const pizzaTimer = setTimeout(
+  (ing1, ing2) => console.log(`Here is your pizza with ${ing1} and ${ing2} 🍕`),
+  3000,
+  ...ingredients // here to give value
+);
+console.log('Waiting...');
+
+if (ingredients.includes('spinach')) clearTimeout(pizzaTimer);// this will clear timeout befor 3 sec
+
+// setInterval
+setInterval(function () {
+  const now = new Date();
+  console.log(now);
+}, 1000);
+similarly clearInterval;
