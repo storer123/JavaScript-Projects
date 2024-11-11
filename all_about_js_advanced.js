@@ -1244,3 +1244,126 @@ console.log(mike instanceof Object); //true
 
 //polymorphism if same name method in both parent and child class , child class method or property will be called
 
+//class inheritance in ES6
+//only 2 suff, extends and super
+// constructor and super is only needed if extra parameters , else no need for constructor or super 
+class StudentCl extends PersonCl {  //"extend" will setup prototype chaining so we dont have to do it on our own
+    constructor(fullName,birthYear,course){
+        // always need to happen first
+        super(fullName,birthYear);
+        this.course=course;
+    }
+    introduce = function(){
+        console.log(`My name is ${this.fullName} and I study ${this.course} and I am ${this.age} years old.}`);
+    }
+};
+const martha = new StudentCl("martha jones",1991,"CS");
+martha.greet();
+martha.introduce();
+
+//object.create -> just linking object, so better than faiking classes
+const PersonProto ={
+    calcAge(){
+        console.log(2037-this.birthYear);
+    },
+    init(firstName,birthYear){
+        this.firstName=firstName;
+        this.birthYear=birthYear;
+    },
+};
+
+const steven = Object.create(PersonProto);
+const StudentProto = Object.create(PersonProto); //person proto is prototype of student proto
+StudentProto.init=function(fullName,birthYear,course){
+    PersonProto.call(this,fullName,birthYear);
+    this.course=course;
+}
+const jay= Object.create(StudentProto);//StudentProto is prototype of object
+
+///////////////////////////////////////
+// Encapsulation: Protected Properties and Methods
+// Encapsulation: Private Class Fields and Methods
+
+// 1) Public fields
+// 2) Private fields
+// 3) Public methods
+// 4) Private methods
+// (there is also the static version for each of the 4 )
+
+class Account {
+  // 1) Public fields (instances)
+  locale = navigator.language;
+
+  // 2) Private fields  (instances)
+  #movements = [];  
+  #pin;           //write here before calling in constructor
+
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this.#pin = pin;
+
+    // Protected property -> not supposed to touch outside the class (convention)
+    // this._movements = [];
+
+    console.log(`Thanks for opening an account, ${owner}`);
+  }
+
+  // 3) Public methods
+
+  // Public interface
+  getMovements() { // -> its common to use like this instead of real getter or setter
+    return this.#movements;
+  }
+
+  deposit(val) {
+    this.#movements.push(val);
+    return this;  // for chaining
+  }
+
+  withdraw(val) {
+    this.deposit(-val);
+    return this;
+  }
+
+  requestLoan(val) {
+     if (this.#approveLoan(val)) {
+      this.deposit(val);
+      console.log(`Loan approved`);
+      return this;
+    }
+  }
+
+  static helper() {
+    console.log('Helper');
+  }
+
+  // 4) Private methods
+  #approveLoan(val) {
+    return true;
+  }
+}
+
+const acc1 = new Account('Jonas', 'EUR', 1111);
+
+// acc1._movements.push(250);
+// acc1._movements.push(-140);
+// acc1.approveLoan(1000);
+
+acc1.deposit(250);
+acc1.withdraw(140);
+acc1.requestLoan(1000);
+console.log(acc1.getMovements());
+console.log(acc1);
+Account.helper();
+
+// console.log(acc1.#movements);
+// console.log(acc1.#pin);
+// console.log(acc1.#approveLoan(100));
+
+// Chaining
+acc1.deposit(300).deposit(500).withdraw(35).requestLoan(25000).withdraw(4000);
+console.log(acc1.getMovements());
+*/
+
+///////////////////////////////////////
