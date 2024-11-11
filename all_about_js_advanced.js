@@ -797,3 +797,450 @@ setInterval(function () {
   console.log(now);
 }, 1000);
 similarly clearInterval;
+
+//DOM
+   (.addeventlistner() , .removeeventlistner())event target(1 node, 2 window)
+//Allows to make js interact with browser
+// we can write js to create, modify, delete html elements, set styles and attributes, and listen and respond to events
+// DOM  tree is generated from html document, with which we can interact
+// it is a very complex api that contains lots of methods and properties to interact with dom tree
+// every node is represented as js object->
+// get access to special node methods like .textcontent,childnodes, parentnodes, clonenode
+//types of nodes -> element-(html button element, html div element,etc), text, comment, document(queryselector, create element, getelementbyid)|
+// inheritance, child will get acess to all methods of parent type
+
+///////////////////////////////////////
+// Selecting, Creating, and Deleting Elements
+
+// Selecting elements
+console.log(document.documentElement);
+console.log(document.head);
+console.log(document.body);
+
+const header = document.querySelector('.header');
+const allSections = document.querySelectorAll('.section');
+console.log(allSections);
+
+document.getElementById('section--1');
+const allButtons = document.getElementsByTagName('button');
+console.log(allButtons);
+
+console.log(document.getElementsByClassName('btn'));
+
+// Creating and inserting elements
+
+.insertAdjacentHTML // DIRECTLY INSERT IN HTML
+const message = document.createElement('div');
+message.classList.add('cookie-message');
+// message.textContent = 'We use cookied for improved functionality and analytics.';
+message.innerHTML =
+  'We use cookied for improved functionality and analytics. <button class="btn btn--close-cookie">Got it!</button>';
+
+// header.prepend(message); // 1st child
+header.append(message);  // last child
+// header.append(message.cloneNode(true));
+
+// header.before(message);
+// header.after(message);
+
+// Delete elements
+document
+  .querySelector('.btn--close-cookie')
+  .addEventListener('click', function () {
+    // message.remove(); newer
+    message.parentElement.removeChild(message);
+  });
+
+  
+///////////////////////////////////////
+// Styles, Attributes and Classes
+  
+// Styles
+message.style.backgroundColor = '#37383d';
+message.style.width = '120%';
+
+console.log(message.style.color);
+console.log(message.style.backgroundColor);
+
+console.log(getComputedStyle(message).color);
+console.log(getComputedStyle(message).height);
+
+message.style.height =
+  Number.parseFloat(getComputedStyle(message).height, 10) + 30 + 'px';
+
+document.documentElement.style.setProperty('--color-primary', 'orangered');
+
+// Attributes
+const logo = document.querySelector('.nav__logo');
+console.log(logo.alt);
+console.log(logo.className);
+
+logo.alt = 'Beautiful minimalist logo';
+
+// Non-standard
+console.log(logo.designer);//wont work
+console.log(logo.getAttribute('designer')); 
+logo.setAttribute('company', 'Bankist');
+
+console.log(logo.src);
+console.log(logo.getAttribute('src'));
+
+const link = document.querySelector('.nav__link--btn');
+console.log(link.href);
+console.log(link.getAttribute('href'));
+
+// Data attributes
+console.log(logo.dataset.versionNumber);
+
+// Classes
+logo.classList.add('c', 'j');
+logo.classList.remove('c', 'j');
+logo.classList.toggle('c');
+logo.classList.contains('c'); // not includes
+
+// Don't use
+logo.clasName = 'jonas';
+
+
+///////////////////////////////////////
+// Types of Events and Event Handlers
+const h1 = document.querySelector('h1');
+
+const alertH1 = function (e) {
+  alert('addEventListener: Great! You are reading the heading :D');
+};
+
+h1.addEventListener('mouseenter', alertH1);
+
+setTimeout(() => h1.removeEventListener('mouseenter', alertH1), 3000);
+
+// h1.onmouseenter = function (e) {
+//   alert('onmouseenter: Great! You are reading the heading :D');
+// };
+
+
+///////////////////////////////////////
+// Event Propagation in Practice
+const randomInt = (min, max) =>
+  Math.floor(Math.random() * (max - min + 1) + min);
+const randomColor = () =>
+  `rgb(${randomInt(0, 255)},${randomInt(0, 255)},${randomInt(0, 255)})`;
+
+document.querySelector('.nav__link').addEventListener('click', function (e) {
+  this.style.backgroundColor = randomColor();
+  console.log('LINK', e.target, e.currentTarget);
+  console.log(e.currentTarget === this);
+
+  // Stop propagation
+  // e.stopPropagation();
+});
+
+document.querySelector('.nav__links').addEventListener('click', function (e) {
+  this.style.backgroundColor = randomColor();
+  console.log('CONTAINER', e.target, e.currentTarget);
+});
+
+document.querySelector('.nav').addEventListener('click', function (e) {
+  this.style.backgroundColor = randomColor();
+  console.log('NAV', e.target, e.currentTarget);
+});
+
+
+///////////////////////////////////////
+// DOM Traversing
+const h1 = document.querySelector('h1');
+
+// Going downwards: child
+console.log(h1.querySelectorAll('.highlight'));
+console.log(h1.childNodes);
+console.log(h1.children);
+h1.firstElementChild.style.color = 'white';
+h1.lastElementChild.style.color = 'orangered';
+
+// Going upwards: parents
+console.log(h1.parentNode);
+console.log(h1.parentElement);
+
+h1.closest('.header').style.background = 'var(--gradient-secondary)';
+
+h1.closest('h1').style.background = 'var(--gradient-primary)';
+
+// Going sideways: siblings
+console.log(h1.previousElementSibling);
+console.log(h1.nextElementSibling);
+
+console.log(h1.previousSibling);
+console.log(h1.nextSibling);
+
+console.log(h1.parentElement.children);
+[...h1.parentElement.children].forEach(function (el) {
+  if (el !== h1) el.style.transform = 'scale(0.5)';
+});
+
+///////////////////////////////////////
+// Sticky navigation
+const initialCoords = section1.getBoundingClientRect();
+console.log(initialCoords);
+
+window.addEventListener('scroll', function () {
+  console.log(window.scrollY);
+
+  if (window.scrollY > initialCoords.top) nav.classList.add('sticky');
+  else nav.classList.remove('sticky');
+});
+
+///////////////////////////////////////
+// Sticky navigation: Intersection Observer API
+
+const obsCallback = function (entries, observer) {
+  entries.forEach(entry => {
+    console.log(entry);
+  });
+};
+
+const obsOptions = {
+  root: null,
+  threshold: [0, 0.2],
+};
+
+const observer = new IntersectionObserver(obsCallback, obsOptions);
+observer.observe(section1);
+
+
+///////////////////////////////////////
+// Lifecycle DOM Events
+document.addEventListener('DOMContentLoaded', function (e) {
+  console.log('HTML parsed and DOM tree built!', e);
+});
+
+window.addEventListener('load', function (e) {
+  console.log('Page fully loaded', e);
+});
+
+window.addEventListener('beforeunload', function (e) {
+  e.preventDefault();
+  console.log(e);
+  e.returnValue = '';
+});
+
+
+
+//oop
+instead of class->object -> prototype(constains method) <- object(can access method)->thus it is called prototypal inheritance, or deligation- behaviour is deligated to the linked prototype object
+arr num (.map not here but) array.prototype.map here
+
+// to create prototype
+1. constructor function (to create object form function(array,map,set are implemented by this)
+2. ES6 Classes (layer of abstraction over constructor function)
+3. Object.create(easiest)
+
+// constructor function is similar to normal function, just called using new keyword
+// convention to start constructor function with capital letter
+//function decleraion and function expression works, but not arrow as it needs this operator
+const Person = function(firstName,birthYear){
+    console.log(this);
+    this.firstName=firstName;
+    this.birthYear=birthYear;
+    console.log(this);
+};
+new Person("ram",1991);
+//when we call a function with a new operator
+//1. new {} (empty object is created)
+//2.function is called , this = {} (this keyword is set to object)
+//3. {} linked to prototype
+//4. funciton automatically returns {} (which we can change so need not be empty)
+
+'use strict';
+const Person = function(firstName,birthYear){
+    //console.log(this);
+    //instance properties  -> these are own property of object
+    this.firstName=firstName;
+    this.birthYear=birthYear;
+    //console.log(this);
+
+    // this.calcAge(birthYear){ // bad practice since each object/instamce will carry this
+    //     console.log(2037-birthYear);
+    // }
+};
+//do this instead -> thesse are not owned by object but inherited insteaad
+console.log(Person.prototype); // object has acess to its prototype , to see (jonas.__proto__)
+Person.prototype.calcAge=function(birthYear){ // bad practice since each object/instamce will carry this
+    console.log(2037-birthYear);
+}
+console.log(Person.prototype);
+new Person("ram",1991);
+//when we call a function with a new operator
+//1. new {} (empty object is created)
+//2.function is called , this = {} (this keyword is set to object)
+//3. {} linked to prototype
+//4. funciton automatically returns {} (which we can change so need not be empty)
+const jack=new Person("rama",1991);
+const ja=new Person("ram",1992);
+console.log(ja.__proto__,jack);
+
+// to check if something is instanceof something
+console.log(jack instanceof Person);
+console.log(Person.prototype.isprototype(Person));->false (jack)->true
+
+// constructor has .prototype property
+// prototype has .constructor property
+//person.prototype is not prototype for person, but objects created by person
+// an object has .__proto__ property which points to objects prototype  (person.prototype (it itself is an object as well))
+jonas.calcAge() -> jonas cant find it in its property so it goes to find in prototype
+all objects will call to the same prototype so Person.protoype has prototype-> Object.prototype (top of prototype chain which points to null)
+person.prototype must also have a prototype
+prototype chain -  (this is how properties will be searched as well) object -> person.prototype-> object.prototype (these are different constructor functions)
+jonas.hasOwnProperty("NAME")-> NOT IN OBJ, NOT IN person.protoype, but in object.prototype (which later points to null, and has some predefined property)
+console.log(jack instanceof Person);
+console.log(jack.__proto__);//->(person.prototype)
+console.log(jack.__proto__.__proto__);//->(Object.prototype)
+console.log(jack.__proto__.__proto__.__proto__);//->null
+console.log(Person.prototype.constructor);//->(will point back to function itself)
+console.dir(Person.prototype.constructor); // to inspect the function
+
+const arr= [3,4,5,6,7] // short hand of new Array === []
+//therefor
+console.log(arr.__proto__===Array.prototype);
+// all arrays will inherit this method
+Array.prototype.unique = function(){
+    return [...new Set(this)];
+}
+//extending prototype of a built in object is not a good idea? since in newer version same name might be used and if multiple developers are working on it it might create bugs and confusion
+console.log(arr.unique());
+
+const h1=document.querySelector("h1");
+console.dir(h1);
+console.dir(x=>x+1);// afunction is also an object so it must also have a prototype (inside, apply, bind, call);
+
+// ES6 classes // just a syntax sugar
+//class expression
+//const PersonCl = class{};
+//class declaration
+class PersonCl{
+    constructor(firstName,birthYear){
+        this.firstName=firstName;
+        this.birthYear=birthYear;
+    }
+    // all of the stuff outside the constructor will be a part of prototype and not the object
+    calcAge(){
+        console.log(2037-this.birthYear);
+    }
+}
+const jessica = new PersonCl("jessica",1996);
+console.log(jessica);
+//or
+PersonCl.prototype.calcAge = function(){
+    console.log(2037-this.birthYear);
+}
+jessica.calcAge();
+
+//1 classes are not hoisted (unlike function declaration)
+//2 classes are also 1st class function
+//3 classes are always (inbuilt) executed in strict mode.
+/*(hoisting
+console.log(myFunction()); // Works fine
+function myFunction() {
+  return "Hello, World!";
+}
+)*/
+//getters and setters -> ***like a property not function or method
+const account = {
+    owner: "jonas",
+    movements : [200,530,120,300],
+    get latest(){ // getter  
+        return this.movements.slice(-1).pop();
+    },
+    set latest(mov){ // setter
+        this.movements.push(mov);
+    }
+};
+
+console.log(account.latest);
+account.latest=50;           // if it would have been a method (account.latest(50))
+console.log(account.latest);
+
+// setters and getters can also be used for validation
+class PersonCl{
+    constructor(fullName,birthYear){
+        this.fullName=fullName;
+        this.birthYear=birthYear;
+    }
+    // all of the stuff outside the constructor will be a part of prototype and not the object
+    calcAge(){     //instance method (as added as an instance of prototype)
+        console.log(2037-this.birthYear);
+    }
+    //set a property that already exist
+    set fullName(name){ //since this property already exist, change this._propertyname (convention to give a different variable name)
+        if(name.includes(" "))this._fullName=name;  
+        else alert("Not a full name");
+    }
+    get fullName(){ 
+        return this._fullName;
+    }
+    Static hey(){               // its attached to person constructor not inherited by object (not present in prototype)
+      console.log("HEY there");
+    }
+}
+//static method
+Person.hey = function(){console.log("HEY there");} // this is a static method, not inheritred by others
+Person.hey();
+jonas.hey();//error
+
+const jessica = new PersonCl("jessica f",1996);
+console.log(jessica);
+//or
+PersonCl.prototype.calcAge = function(){
+    console.log(2037-this.birthYear);
+}
+jessica.calcAge();
+console.log(jessica._fullName);
+
+//3rd way object.create (no new operator, constructor function or protoype properties involved), in real world not used much
+const PersonProto ={
+    calcAge(){
+        console.log(2037-this.birthYear);
+    },
+    //any name not necessary init
+    init(firstName,birthYear){
+      this.firstName=firstName;
+      this.birthYear=birthYear;
+    },
+};
+const steven = Object.create(PersonProto);
+console.log(steven);
+//steven.name = "steven";
+//steven.birthYear= 2002;
+//or
+steven.init("steven",1991);
+steven.calcAge();
+console.log(steven.__proto__===PersonProto);//true
+// when new keyword is used it automatically sets prototype of object to constructor prototype
+// object.create manually sets prototype
+//used for inheritance
+
+
+const Student =function(firstName,birthYear,course){
+    Person.call(this,firstName,birthYear); // person's this becomes Student's this
+    this.course= course;
+}
+//Linking prototype
+//we can do 
+//Student.prototype=Person.prototype;// but wrong as students object will point to prototype of person and not student
+// we want person's prototype to be inherited by student.prototype or student's protoype should point to person prototype
+Student.prototype= Object.create(Person.prototype);
+//student.prototype.constructor should point back to student but due to above its pointing to person
+Student.prototype.constructor=Student;
+
+
+Student.prototype.introduce = function(){
+    console.log(`My name is ${this.firstName} and I study ${this.course} and I am ${this.calcAge()} years old.}`);
+};
+const mike = new Student("MIKE",2020,"CS");
+mike.introduce();
+//calc age is called by going up in prototype chain
+console.log(mike instanceof Student);//true
+console.log(mike instanceof Person); //true
+console.log(mike instanceof Object); //true
+
+//polymorphism if same name method in both parent and child class , child class method or property will be called
+
