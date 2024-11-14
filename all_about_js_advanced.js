@@ -798,233 +798,6 @@ setInterval(function () {
 }, 1000);
 similarly clearInterval;
 
-//DOM
-   (.addeventlistner() , .removeeventlistner())event target(1 node, 2 window)
-//Allows to make js interact with browser
-// we can write js to create, modify, delete html elements, set styles and attributes, and listen and respond to events
-// DOM  tree is generated from html document, with which we can interact
-// it is a very complex api that contains lots of methods and properties to interact with dom tree
-// every node is represented as js object->
-// get access to special node methods like .textcontent,childnodes, parentnodes, clonenode
-//types of nodes -> element-(html button element, html div element,etc), text, comment, document(queryselector, create element, getelementbyid)|
-// inheritance, child will get acess to all methods of parent type
-
-///////////////////////////////////////
-// Selecting, Creating, and Deleting Elements
-
-// Selecting elements
-console.log(document.documentElement);
-console.log(document.head);
-console.log(document.body);
-
-const header = document.querySelector('.header');
-const allSections = document.querySelectorAll('.section');
-console.log(allSections);
-
-document.getElementById('section--1');
-const allButtons = document.getElementsByTagName('button');
-console.log(allButtons);
-
-console.log(document.getElementsByClassName('btn'));
-
-// Creating and inserting elements
-
-.insertAdjacentHTML // DIRECTLY INSERT IN HTML
-const message = document.createElement('div');
-message.classList.add('cookie-message');
-// message.textContent = 'We use cookied for improved functionality and analytics.';
-message.innerHTML =
-  'We use cookied for improved functionality and analytics. <button class="btn btn--close-cookie">Got it!</button>';
-
-// header.prepend(message); // 1st child
-header.append(message);  // last child
-// header.append(message.cloneNode(true));
-
-// header.before(message);
-// header.after(message);
-
-// Delete elements
-document
-  .querySelector('.btn--close-cookie')
-  .addEventListener('click', function () {
-    // message.remove(); newer
-    message.parentElement.removeChild(message);
-  });
-
-  
-///////////////////////////////////////
-// Styles, Attributes and Classes
-  
-// Styles
-message.style.backgroundColor = '#37383d';
-message.style.width = '120%';
-
-console.log(message.style.color);
-console.log(message.style.backgroundColor);
-
-console.log(getComputedStyle(message).color);
-console.log(getComputedStyle(message).height);
-
-message.style.height =
-  Number.parseFloat(getComputedStyle(message).height, 10) + 30 + 'px';
-
-document.documentElement.style.setProperty('--color-primary', 'orangered');
-
-// Attributes
-const logo = document.querySelector('.nav__logo');
-console.log(logo.alt);
-console.log(logo.className);
-
-logo.alt = 'Beautiful minimalist logo';
-
-// Non-standard
-console.log(logo.designer);//wont work
-console.log(logo.getAttribute('designer')); 
-logo.setAttribute('company', 'Bankist');
-
-console.log(logo.src);
-console.log(logo.getAttribute('src'));
-
-const link = document.querySelector('.nav__link--btn');
-console.log(link.href);
-console.log(link.getAttribute('href'));
-
-// Data attributes
-console.log(logo.dataset.versionNumber);
-
-// Classes
-logo.classList.add('c', 'j');
-logo.classList.remove('c', 'j');
-logo.classList.toggle('c');
-logo.classList.contains('c'); // not includes
-
-// Don't use
-logo.clasName = 'jonas';
-
-
-///////////////////////////////////////
-// Types of Events and Event Handlers
-const h1 = document.querySelector('h1');
-
-const alertH1 = function (e) {
-  alert('addEventListener: Great! You are reading the heading :D');
-};
-
-h1.addEventListener('mouseenter', alertH1);
-
-setTimeout(() => h1.removeEventListener('mouseenter', alertH1), 3000);
-
-// h1.onmouseenter = function (e) {
-//   alert('onmouseenter: Great! You are reading the heading :D');
-// };
-
-
-///////////////////////////////////////
-// Event Propagation in Practice
-const randomInt = (min, max) =>
-  Math.floor(Math.random() * (max - min + 1) + min);
-const randomColor = () =>
-  `rgb(${randomInt(0, 255)},${randomInt(0, 255)},${randomInt(0, 255)})`;
-
-document.querySelector('.nav__link').addEventListener('click', function (e) {
-  this.style.backgroundColor = randomColor();
-  console.log('LINK', e.target, e.currentTarget);
-  console.log(e.currentTarget === this);
-
-  // Stop propagation
-  // e.stopPropagation();
-});
-
-document.querySelector('.nav__links').addEventListener('click', function (e) {
-  this.style.backgroundColor = randomColor();
-  console.log('CONTAINER', e.target, e.currentTarget);
-});
-
-document.querySelector('.nav').addEventListener('click', function (e) {
-  this.style.backgroundColor = randomColor();
-  console.log('NAV', e.target, e.currentTarget);
-});
-
-
-///////////////////////////////////////
-// DOM Traversing
-const h1 = document.querySelector('h1');
-
-// Going downwards: child
-console.log(h1.querySelectorAll('.highlight'));
-console.log(h1.childNodes);
-console.log(h1.children);
-h1.firstElementChild.style.color = 'white';
-h1.lastElementChild.style.color = 'orangered';
-
-// Going upwards: parents
-console.log(h1.parentNode);
-console.log(h1.parentElement);
-
-h1.closest('.header').style.background = 'var(--gradient-secondary)';
-
-h1.closest('h1').style.background = 'var(--gradient-primary)';
-
-// Going sideways: siblings
-console.log(h1.previousElementSibling);
-console.log(h1.nextElementSibling);
-
-console.log(h1.previousSibling);
-console.log(h1.nextSibling);
-
-console.log(h1.parentElement.children);
-[...h1.parentElement.children].forEach(function (el) {
-  if (el !== h1) el.style.transform = 'scale(0.5)';
-});
-
-///////////////////////////////////////
-// Sticky navigation
-const initialCoords = section1.getBoundingClientRect();
-console.log(initialCoords);
-
-window.addEventListener('scroll', function () {
-  console.log(window.scrollY);
-
-  if (window.scrollY > initialCoords.top) nav.classList.add('sticky');
-  else nav.classList.remove('sticky');
-});
-
-///////////////////////////////////////
-// Sticky navigation: Intersection Observer API
-
-const obsCallback = function (entries, observer) {
-  entries.forEach(entry => {
-    console.log(entry);
-  });
-};
-
-const obsOptions = {
-  root: null,
-  threshold: [0, 0.2],
-};
-
-const observer = new IntersectionObserver(obsCallback, obsOptions);
-observer.observe(section1);
-
-
-///////////////////////////////////////
-// Lifecycle DOM Events
-document.addEventListener('DOMContentLoaded', function (e) {
-  console.log('HTML parsed and DOM tree built!', e);
-});
-
-window.addEventListener('load', function (e) {
-  console.log('Page fully loaded', e);
-});
-
-window.addEventListener('beforeunload', function (e) {
-  e.preventDefault();
-  console.log(e);
-  e.returnValue = '';
-});
-
-
-
 //oop
 instead of class->object -> prototype(constains method) <- object(can access method)->thus it is called prototypal inheritance, or deligation- behaviour is deligated to the linked prototype object
 arr num (.map not here but) array.prototype.map here
@@ -1364,4 +1137,313 @@ Account.helper();
 // Chaining
 acc1.deposit(300).deposit(500).withdraw(35).requestLoan(25000).withdraw(4000);
 console.log(acc1.getMovements());
-///////////////////////////////////////oop end //////////
+///////////////////////////////////////oop end - dom start //////////
+
+
+//DOM
+   (.addeventlistner() , .removeeventlistner())event target(1 node, 2 window)
+//Allows to make js interact with browser
+// we can write js to create, modify, delete html elements, set styles and attributes, and listen and respond to events
+// DOM  tree is generated from html document, with which we can interact, which consists of nodes
+// it is a very complex api that contains lots of methods and properties to interact with dom tree
+// every node is represented as js object ->
+// get access to special node methods like .textcontent,childnodes, parentnodes, clonenode
+//types of nodes -> element-(html button element, html div element,etc), text, comment, document(queryselector, create element, getelementbyid)|
+// inheritance, child will get acess to all methods of parent type
+
+///////////////////////////////////////
+// Selecting, Creating, and Deleting Elements
+
+// Selecting elements
+console.log(document.documentElement);
+console.log(document.head);
+console.log(document.body);
+
+const header = document.querySelector('.header');
+const allSections = document.querySelectorAll('.section');
+console.log(allSections);
+
+document.getElementById('section--1');
+const allButtons = document.getElementsByTagName('button');
+console.log(allButtons);
+
+console.log(document.getElementsByClassName('btn'));
+
+// Creating and inserting elements
+
+.insertAdjacentHTML // DIRECTLY INSERT IN HTML
+const message = document.createElement('div');
+message.classList.add('cookie-message');
+// message.textContent = 'We use cookied for improved functionality and analytics.';
+message.innerHTML =
+  'We use cookied for improved functionality and analytics. <button class="btn btn--close-cookie">Got it!</button>';
+
+// header.prepend(message); // 1st child
+header.append(message);  // last child
+// header.append(message.cloneNode(true));
+
+// header.before(message);
+// header.after(message);
+
+// Delete elements
+document
+  .querySelector('.btn--close-cookie')
+  .addEventListener('click', function () {
+    // message.remove(); newer
+    message.parentElement.removeChild(message);
+  });
+
+  
+///////////////////////////////////////
+// Styles, Attributes and Classes
+  
+// Styles
+//these are inline styles as dom directly inlines these stuffs
+message.style.backgroundColor = '#37383d';
+message.style.width = '120%';
+
+console.log(message.style.color); //blank
+console.log(message.style.backgroundColor); //styles we set ourselves as inline so visible else down method
+
+console.log(getComputedStyle(message).color);  
+console.log(getComputedStyle(message).height); // but this is read only to change see below
+
+message.style.height =
+  Number.parseFloat(getComputedStyle(message).height, 10) + 30 + 'px';
+
+document.documentElement.style.setProperty('--color-primary', 'orangered');
+
+// Attributes
+const logo = document.querySelector('.nav__logo');
+console.log(logo.alt);
+console.log(logo.className);
+
+logo.alt = 'Beautiful minimalist logo';
+
+// Non-standard
+console.log(logo.designer);//wont work
+console.log(logo.getAttribute('designer')); 
+logo.setAttribute('company', 'Bankist');
+
+console.log(logo.src);
+console.log(logo.getAttribute('src'));
+
+const link = document.querySelector('.nav__link--btn');
+console.log(link.href);
+console.log(link.getAttribute('href'));
+
+// Data attributes
+console.log(logo.dataset.versionNumber);
+
+// Classes
+logo.classList.add('c', 'j');
+logo.classList.remove('c', 'j');
+logo.classList.toggle('c');
+logo.classList.contains('c'); // not includes
+ 
+// Don't use -> overwrite all the classes + only 1 class can be added like this
+logo.clasName = 'jonas';
+
+
+///////////////////////////////////////
+// Types of Events and Event Handlers
+const h1=document.querySelector("h1");
+//1.use event listner
+// h1.addEventListener("mouseenter",function(e){
+//   alert("you are reading the heading");
+// })
+
+//2. use onevent property
+// h1.onmouseenter  = function(e){
+//   alert("you are reading the heading");
+// };
+
+//1.2 export the function ->to remove event listner
+const alert1=function(e){
+  alert("yo! alert");
+  //to use it for only once
+  //h1.removeEventListener("mouseenter",alert1);
+}
+h1.addEventListener("mouseenter",alert1);
+setTimeout(() => h1.removeEventListener("mouseenter",alert1),3000);
+
+//3. directly change it in the element
+//<h1 onclick="alert("html alert")>
+///////////////////////////////////////////
+// Event Propagation in Practice
+
+//capturing and bubling event
+//from document to that particular element in the tree, and then from that element to document 
+//thus patterns can be made and used
+//some are created directly in particular element
+
+// event happens at root document then goes down to target,capture phase (document root -> target),
+//but event handler doesnt pick up stuff during capture phase  ,
+//but if you want to capture during capture phase you can add the 3rd parameter to it "true"
+//when we click on nav link its also like click happens at navlinks and nav as it bubbles up
+//+ e.target is same for all = nav__link (where click happens, not where its handled)
+//e.current target is diffrent (where its handled) = "this"
+//we can stop the propogation from bubbling up, but its not a good practice
+document.querySelector(".nav__link").addEventListener("click",function(e){
+  this.style.backgroundColor = randomColor();
+  console.log(randomColor(),e.target,e.currentTarget);
+},true)
+document.querySelector(".nav__links").addEventListener("click",function(e){
+  this.style.backgroundColor = randomColor();
+  console.log(randomColor(),e.target,e.currentTarget);
+  //stopping propogation from bubbling up
+  e.stopPropagation();
+},true)
+document.querySelector(".nav").addEventListener("click",function(e){
+  this.style.backgroundColor = randomColor();
+  console.log(randomColor(),e.target,e.currentTarget);
+},true)
+//due to stopping propagation 
+//when 3rd parameter "nave__link" doesn't work, and nav happens 1st
+//else  nav doesnt work, nav__link happens 1st
+//bublling phase can be used for delegation
+
+///////////////////////////////////////
+// scroll , getBoundingClientRect();
+buttonScrollTo.addEventListener("click",function(e){
+  // const s2coords = section2.getBoundingClientRect();
+  // console.log(s2coords);
+  const coords = e.target.getBoundingClientRect();
+  console.log(coords);
+});
+//x and y is relative to visible wondow/ viewport
+//width  -> of target
+//height -> of target
+//x      -> form left
+//y      -> from visible top to top of target
+//left   ->target from left  = x
+//right  -> target from right
+//top    -> is top = y
+//bottom -> top + height
+
+// not realtive but real
+//current scroll
+//or window.scrollX
+scrollX
+scrollY
+//height and width of viewport
+document.documentElement.clientHeight;
+document.documentElement.clientWidth;
+
+//scrolling
+buttonScrollTo.addEventListener("click",function(e){
+  const s2coords = section2.getBoundingClientRect();
+  //scrolling -old school
+  // window.scrollTo(
+  //   {
+  //     left: s2coords.left+window.scrollX,
+  //     top: s2coords.top,
+  //     behavior:"smooth"
+  //   });//same as x+scrolled and y+scrolled
+  //new way
+  section2.scrollIntoView({behavior:"smooth"});
+});
+
+
+
+///////////////////////////////////////
+// Event delegation : page navigation
+// document.querySelectorAll(".nav__link").forEach(function(el){ // but is it good if we attach 1000s of eventlistners to if 1000s of link -> thus use delegation
+//   el.addEventListener("click",function(e){
+//     console.log("LINK");
+//     e.preventDefault();// stops going to #section--x
+//     const id = this.getAttribute("href");
+//     //we dont want absolute url but relative one i.e. the stuff which we have written in html
+//     //else this.href
+//     document.querySelector(id).scrollIntoView({behavior:"smooth"});
+//   })
+// });
+// now using event delegation
+// 1. Add event listner to common parent element
+// 2. Determine what element origignated this event (where did we click on parnet)
+document.querySelector(".nav__links").addEventListener("click",function(e){ //now only 1 event listner will be enough
+  console.log(e.target);
+  //matching strategy
+  if(e.target.classList.contains("nav__link")){
+    e.preventDefault();
+    const id = e.target.getAttribute("href");
+    document.querySelector(id).scrollIntoView({behavior: "smooth"});
+  }
+});
+///////////////////////////////////////
+// DOM Traversing
+const h1 = document.querySelector('h1');
+
+// Going downwards: child
+console.log(h1.querySelectorAll('.highlight'));// no matter how deep the child is ,qs will get it
+console.log(h1.childNodes);//to see only direct child nodes( like text ,,comment and not just elements )
+console.log(h1.children); // to only direct elements (not nodes)
+h1.firstElementChild.style.color = 'white';
+h1.lastElementChild.style.color = 'orangered';
+
+// Going upwards: parents
+console.log(h1.parentNode);
+console.log(h1.parentElement);
+//not a direct parent,, closeset is oppsite of query selector no matter how far upwards will search and give
+h1.closest('.header').style.background = 'var(--gradient-secondary)';
+
+h1.closest('h1').style.background = 'var(--gradient-primary)';
+
+// Going sideways: siblings
+console.log(h1.previousElementSibling);
+console.log(h1.nextElementSibling);
+
+console.log(h1.previousSibling);
+console.log(h1.nextSibling);
+//all sibling
+console.log(h1.parentElement.children);
+[...h1.parentElement.children].forEach(function (el) {
+  if (el !== h1) el.style.transform = 'scale(0.5)';
+});
+
+///////////////////////////////////////
+// Sticky navigation
+const initialCoords = section1.getBoundingClientRect();
+console.log(initialCoords);
+
+window.addEventListener('scroll', function () {
+  console.log(window.scrollY);
+
+  if (window.scrollY > initialCoords.top) nav.classList.add('sticky');
+  else nav.classList.remove('sticky');
+});
+
+///////////////////////////////////////
+// Sticky navigation: Intersection Observer API
+
+const obsCallback = function (entries, observer) {
+  entries.forEach(entry => {
+    console.log(entry);
+  });
+};
+
+const obsOptions = {
+  root: null,
+  threshold: [0, 0.2],
+};
+
+const observer = new IntersectionObserver(obsCallback, obsOptions);
+observer.observe(section1);
+
+
+///////////////////////////////////////
+// Lifecycle DOM Events
+document.addEventListener('DOMContentLoaded', function (e) {
+  console.log('HTML parsed and DOM tree built!', e);
+});
+
+window.addEventListener('load', function (e) {
+  console.log('Page fully loaded', e);
+});
+
+window.addEventListener('beforeunload', function (e) {
+  e.preventDefault();
+  console.log(e);
+  e.returnValue = '';
+});
+
