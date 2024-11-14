@@ -1,12 +1,12 @@
 // Javascript  - can run on browser, client side scripting (console is a small run time environment.)
-//             - dynamic interpreted language
+//             - dynamic interpreted language  , for example const x -> can become integer or string + earlier interpreter , now compiler but no object code directly compiled and run.
 //             - processing language like(php, python(flask or django framework))
 //             - but what about server side, servers doesn’t run on browser, use nodejs-> allows you to run JavaScript on the server.(run time env for server side), and express built on top of it.
 //             - safe language(privacy protection, ensured by community)
 //             - write < script > just above body so that document gets ready till  script comes-> can be inline else need to load another script file
 // 	           - can be written within html or a separate .js file
-//             - ECMA Script - maintain standard while updating js, ES5, ES6(2015),...(EVERY YEAR),   ES6+ SINCE FORM ES6 ALL ARE MOSTLY COMPATIBLE IN MOST BROWSER, ESNEXT ->2021+ not even a part of enigma script but people start using it
-//             - All of these versions are backward compatible-> why ? concept of not breaking the web i.i. things are iteratively added in newer version not break and build like other languages? why to make it so that even olderwebsite made in say 2008 still exist and work
+//             - ECMA Script - maintain standard while updating js, ES5, ES6,ES15(2015),...(EVERY YEAR),   ES6+ SINCE FORM ES6 ALL ARE MOSTLY COMPATIBLE IN MOST BROWSER, ESNEXT ->2021+ not even a part of enigma script but people start using it
+//             - All of these versions are backward compatible-> why ? concept of not breaking the web i.e. things are iteratively added in newer version not break and build like other languages? why to make it so that even olderwebsite made in say 2008 still exist and work
 //             - but not forward compatible, that is say 2020's code run on 2008;s browser, that wont work
 //             - after development during production ,bable to transpile and polyfill code - since users browser might not be up to date, and forward compatiblity is required
 // JSON - JavaScript Object Notation - light weight data-interchange format, 
@@ -814,4 +814,8 @@ both me and meCopy family got changed
 //deep copy
 //will do using external library later
 
+/*
 
+Finally, before dismissing an employee, the employer has to hold disciplinary
+proceedings (domestic enquiry) in a proper way. In case of discharge, he may
+or may not go for it.*/
