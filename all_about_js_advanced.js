@@ -1475,7 +1475,10 @@ window.addEventListener('scroll', function () {
 
 ///////////////////////////////////////
 // Sticky navigation: Intersection Observer API
-
+//intersection observer api
+//allows to obseve if some target stuff intersect some other stuff, and it reaches a certain threshold, if yes trigger it 
+//will get called each time root and target intersects
+//entries = array of threshold
 const obsCallback = function (entries, observer) {
   entries.forEach(entry => {
     console.log(entry);
@@ -1491,16 +1494,180 @@ const observer = new IntersectionObserver(obsCallback, obsOptions);
 observer.observe(section1);
 
 
+const header = document.querySelector(".header");
+const navHeight = nav.getBoundingClientRect().height;
+const obsCallback = function (entries,observers) {
+  const [entry] = entries;
+  if(!entry.isIntersecting)nav.classList.add("sticky");
+  else nav.classList.remove("sticky");
+};
+const obsOptions = {
+  root: null, //for viewport
+  threshold: 0, // % of interesction at which callback function is called.
+  //say 10% came in,100% in, 0% in/out
+  //here 0% is visible then call function 
+  rootMargin: `-${navHeight}px` ,//height of navigation
+  //rootMargin - box outside target
+};
+
+const observer = new IntersectionObserver(obsCallback, obsOptions);
+
+  //here as soon as header scrolls out of view
+observer.observe(header);//header is the target, is intersecting viewport at 0 %
+///////////////////////////////////////
+
+//reveal element as you scroll close to it, or approach it
+//slides in animation using css and js
+//hide them,and move a bit down, when intersects, make them visible + natural height
+//
+
+//reveal sections
+const allSection = document.querySelectorAll(".section");
+const revealSection = function(entries,observer){
+  const [entry] = entries;
+  console.log(entry);
+  if(!entry.isIntersecting)return;
+  else
+  entry.target.classList.remove("section--hidden");
+  observer.unobserve(entry.target);
+}
+
+const sectionObserver = new IntersectionObserver(revealSection,{
+  root: null,
+  threshold: 0.15,
+});
+allSection.forEach(function(section){
+  sectionObserver.observe(section);
+  section.classList.add("section--hidden");
+})
+
+///////////////////////////////////////
+//lazy loading
+
+//lazy loading image to optimize the site-> best for performance
+//low resolution loaded at beginning
+//its ugly, then put filter i.e.blur
+
+const imageTargets = document.querySelectorAll("img[data-src]");
+const loadImg = function(entries,observer){
+  const [entry] = entries;
+  console.log(entry);
+  if(!entry.isIntersecting)return;
+  //replace src with data src
+  entry.target.src = entry.target.dataset.src;
+  //when it finishes it emits load event , if not listen and network slow it will unblur the ugly image
+  entry.target.addEventListener("load",function(){
+
+  entry.target.classList.remove("lazy-img");
+  });
+  observer.unobserve(entry.target);
+}
+const imgObserver = new IntersectionObserver(loadImg,{
+  root:null,
+  threshold: 0,
+  rootMargin:"+200px"//to make it load a bit earlier
+});
+
+imageTargets.forEach(img => imgObserver.observe(img));
+///////////////////////////////////////
+
+//building a slider component
+
+
+//slider
+const slides = document.querySelectorAll(".slide");
+const btnLeft = document.querySelector(".slider__btn--left");
+const btnRight = document.querySelector(".slider__btn--right");
+let currSlide =0; 
+const maxSlide= slides.length;
+
+// const slider = document.querySelector(".slider");
+// slider.style.transform = "scale(0.5) translateX (-300px)";
+// slider.style.overflow = "visible";
+
+
+
+const gotoSlide = function(slide){
+  slides.forEach(
+    (s,i)=> s.style.transform = `translateX(${100 * (i-slide) }%)`);
+}
+//dot mover
+
+const dotContainer = document.querySelector(".dots");
+const createDots = function(){
+  slides.forEach(function(_,i){
+      dotContainer.insertAdjacentHTML(
+        "beforeend",
+        `<button class="dots__dot" data-slide="${i}"></button>`
+      )
+  });
+};
+
+createDots();
+
+//activate dot
+const activateDot = function(slide){
+  document.querySelectorAll(".dots__dot").forEach(
+    dot => dot.classList.remove("dots__dot--active"));
+  document.querySelector(`.dots__dot[data-slide="${slide}"]`).classList.add("dots__dot--active");
+}
+activateDot(0);
+gotoSlide(0);
+//next slide , -100,0,100,200
+const nextSlide = function(){
+  if(currSlide === maxSlide-1) currSlide=0;
+  else currSlide++;
+  gotoSlide(currSlide);
+  activateDot(currSlide);
+}
+btnRight.addEventListener("click",function(){
+  if(currSlide === maxSlide-1) currSlide=0;
+  else currSlide++;
+  gotoSlide(currSlide);
+})
+
+const prevSlide = function(){
+  if(currSlide===0)currSlide=maxSlide-1;
+  else currSlide--;
+  gotoSlide(currSlide);
+  activateDot(currSlide);
+}
+
+btnLeft.addEventListener("click",prevSlide);
+
+// now do the above stuff using arrow key
+
+document.addEventListener("keydown",function(e){
+  console.log(e);
+  if(e.key === "ArrowLeft")prevSlide();
+  else if(e.key === "ArrowRight")nextSlide();
+})
+
+
+dotContainer.addEventListener("click",function(e){
+  if(e.target.classList.contains("dots__dot")){
+    console.log("DOT");
+    const {slide} = e.target.dataset;
+    //const slide=e.dataset.slide;
+    gotoSlide(slide);
+    activateDot(slide);
+  }
+});
+
+
+
 ///////////////////////////////////////
 // Lifecycle DOM Events
 document.addEventListener('DOMContentLoaded', function (e) {
   console.log('HTML parsed and DOM tree built!', e);
 });
+//so should we wrap it around the above, no because we write <script> at end of body so it is read at last, and executed after other stuffs are read
 
+//load fired after complete page has finished loading (including events and images)
 window.addEventListener('load', function (e) {
   console.log('Page fully loaded', e);
 });
-
+//when filling a form, gives a confirmation popup, that if you really want to reload
 window.addEventListener('beforeunload', function (e) {
   e.preventDefault();
   console.log(e);
