@@ -1400,6 +1400,66 @@ console.log(h1.parentElement.children);
 [...h1.parentElement.children].forEach(function (el) {
   if (el !== h1) el.style.transform = 'scale(0.5)';
 });
+///////////////////////////////////////
+//tabbed content
+//use event delegation
+//
+//all 3 content are present we just need to activate and hide
+//200 for 200 buttons 
+//tabs.forEach(t=>t.addEventListener("click",()=> console.log("tab")));
+
+//use event delegation
+tabsContainer.addEventListener("click",function(e){
+  
+  const clicked = e.target.closest(".operations__tab");
+  console.log(clicked);
+  //gaurd clause
+  if(!clicked)return; //  as container doesnt have button tab as its parent
+  //activate tab
+  //operations__content--active -> shows hidden stuff
+  //operation__content hide stuff
+  tabs.forEach(t=>t.classList.remove("operations__tab--active"));
+  clicked.classList.add("operations__tab--active");
+  //activate content tab
+  tabsContent.forEach(c=>c.classList.remove("operations__content--active"));
+  document.querySelector(`.operations__content--${clicked.dataset.tab}`).classList.add("operations__content--active");
+  //HTML: <div data-tab="1">
+//JavaScript: clicked.dataset.tab
+//In JavaScript, dataset maps the data-* attributes to camelCase property names. So, data-tab becomes dataset.tab (note the camelCase tab).
+
+})
+///////////////////////////////////////
+
+//passing arguments to event handler
+//menu fade animation
+//but we cant add event listner to each link but we can use delegation
+
+
+//const nav = document.querySelector(".nav");
+//mouse enter does not bubble, so we use mouseover
+//mouse enter- leave, mouse over-out (opposites)
+
+const handleHover = function(e){
+  const link = e.target;
+    const siblings = link.closest(".nav").querySelectorAll(".nav__link");
+    const logo = link.closest(".nav").querySelector("img");
+    siblings.forEach(el=>{
+      if(el !== link) el.style.opacity =this;
+    });
+    logo.style.opacity=this;
+}
+//wont work since we need opacity and event
+//nav.addEventListener("mouseout", handleHover);
+//wont work since  1. e not defined, 2.addeventlistner expects a function not a function call
+//nav.addEventListener("mouseover",handleHover(e,0.5))
+//work but can be made better
+//nav.addEventListener("mouseover",function(e){handleHover(e,0.5)});
+//we can use bind method
+//bind method creates a copy of function thats called and sets the "this " keyword to whatever value we pass in it
+nav.addEventListener("mouseover",handleHover.bind(0.5));
+nav.addEventListener("mouseout",handleHover.bind(1));
+//thus we are using this keyword to pass argument apart from event in addeventlistner, as add eventlistner can only take one real argument
+
 
 ///////////////////////////////////////
 // Sticky navigation
