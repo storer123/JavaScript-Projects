@@ -1674,3 +1674,21 @@ window.addEventListener('beforeunload', function (e) {
   e.returnValue = '';
 });
 
+////////////////////////////////////////////////
+//local storage
+_setLocalStorage(){//based on key value pair
+  localStorage.setItem('workouts',JSON.stringify(this.#workouts)); 
+}
+_getLocalStorage(){//while converting objects to string and back to objects, prototype chain is lost, so inheritance fails
+        //console.log("heres the local data");
+  const data = JSON.parse(localStorage.getItem("workouts"));
+  console.log(data);
+  if(!data)return ;
+  this.#workouts=data;
+  this.#workouts.forEach(work=>{this._renderWorkout(work);});   
+}    
+reset(){//app.reset();
+  localStorage.removeItem("workouts");
+  location.reload();    
+}
+      
