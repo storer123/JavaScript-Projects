@@ -1691,4 +1691,411 @@ reset(){//app.reset();
   localStorage.removeItem("workouts");
   location.reload();    
 }
-      
+
+//////////////////////////////////////////////////////
+asynchronous code - runs in background, non - blocking code
+addEventListner waits - is not asynchronous
+img.src= "abc.png" // is asychronous runs and loads in background
+setTimeOut(fun(){},100)// is asynchronous -> will call function after 100 ms, till that time stuffs will run
+
+AJAX- Asynchronous Javascript And Xml - allows to communicate with web servers on an asynchronous ways
+with ajax - we can request data form web servers dynamically
+client/browser --request -- web server (happens asynchronouslly like get post put )
+
+api- piece of software that can be used by another piece of software, to talk to each other
+ex- dom, geolocation, own class api, online api(application running on server that requests and respons)
+//we use 3rd partys api (which are free)
+but now ajax - xml not used but json format is used for data in api's
+  
+'use strict';
+
+const btn = document.querySelector('.btn-country');
+const countriesContainer = document.querySelector('.countries');
+
+///////////////////////////////////////
+
+const renderCountry = function (data, className = '') {
+    const html = `
+    <article class="country ${className}">
+      <img class="country__img" src="${data.flag}" />
+      <div class="country__data">
+        <h3 class="country__name">${data.name}</h3>
+        <h4 class="country__region">${data.region}</h4>
+        <p class="country__row"><span>👫</span>${(
+          +data.population / 1000000
+        ).toFixed(1)} million people</p>
+        <p class="country__row"><span>🗣️</span>${data.languages[0].name}</p>
+        <p class="country__row"><span>💰</span>${data.currencies[0].name}</p>
+      </div>
+    </article>
+    `;
+    countriesContainer.insertAdjacentHTML('beforeend', html);
+    countriesContainer.style.opacity = 1;
+  };
+
+const getCountryAndNeighbour = function (country) {
+    // AJAX call country 1
+    const request = new XMLHttpRequest();
+    request.open('GET', `https://countries-api-836d.onrender.com/countries/name/${country}`);
+    request.send();
+  
+    request.addEventListener('load', function () {
+      const [data] = JSON.parse(this.responseText);
+      console.log(data);
+  
+      // Render country 1
+      renderCountry(data);
+  
+      // Get neighbour country (2)
+      const neighbour = data.borders?.[0];
+      if (!neighbour) return;
+  
+      // AJAX call country 2
+      const request2 = new XMLHttpRequest();
+      request2.open('GET', `https://countries-api-836d.onrender.com/countries/alpha/${neighbour}`);
+      request2.send();
+  
+      request2.addEventListener('load', function () {
+        const data2 = JSON.parse(this.responseText);
+        console.log(data2);
+  
+        renderCountry(data2, 'neighbour');
+      });
+    });
+  };
+//in ajax all of these will start before 1 is loaded, thus anyofthese can load 1st as they all run in parallel
+getCountryAndNeighbour("portugal");
+getCountryAndNeighbour("usa");
+// getCountryData("australia");
+// getCountryData("usa");
+// getCountryData("germany");
+
+//to solve it /to order it, chain it , use data of one ajax call for another, or call back inside of call back
+//call back hell - if we want to handle asynchronous task in sequence
+// but it is hard to maintain and understand
+//to escape call back hell we use promises
+
+//promises
+const request = fetch( `https://countries-api-836d.onrender.com/countries/name/india`);
+console.log(request);//promise
+// promise a container for future value - this value can be response comming from api request
+//promise is a container for an asynchronously delivered value
+//promise is an object that is used as a placeholder for the future result of an asynchronous operation
+//example-> i buy a lottery ticket, lottrey happens asynchronously, if won got the money
+//promise life cycle ********
+//pending-asyntask->settled(async task finished) -> fullfiled or rejected
+//build promise (we use fetch api which returns promise object)->consumes promise 
+
+const getCountryData= function(country){
+    fetch( `https://countries-api-836d.onrender.com/countries/name/${country}`).then(function(response){// once promice fullfilled, call the call back function
+        console.log(response);//but we cant read, use json
+        return response.json();//but json function itself is asynchronous, so it will also retun a promise
+        //json method is available for all responses of fetch method, to read the response
+    }).then(function(data){
+        console.log(data);
+        renderCountry(data[0]);
+    });//this then is for json
+};
+getCountryData("portugal");
+
+//finally using via promise
+
+const getCountryData= function(country){
+    //country 1
+    fetch( `https://countries-api-836d.onrender.com/countries/name/${country}`)
+    .then((response)=>response.json())
+    .then((data)=>{
+        renderCountry(data[0]);
+        const neighbour = data[0].borders[0];
+        if(!neighbour)return;
+        //country 2
+        return fetch(`https://countries-api-836d.onrender.com/countries/alpha/${neighbour}`)
+    })
+    .then(response => response.json())
+    .then(data=>renderCountry(data,"neighbour"));
+};
+getCountryData("portugal");
+
+//promises do not get rid of call back, but it does get rid of call back hell (triangular shape)
+// then method always returns a promise no matter if we return stuff or not
+// but if we do return a value that becomes a fullfilment value
+
+//to handle error- rejected promise, currently only if a page is loaded and we lose the internet connection
+//errors propagate down the chain till caught , so either  give another call back function in then, or at the end of chain add a catch block
+//then method only called when promise is fullfilled , catch when promise is rejected, finally all the time
+getCountryData("zdfgerfg");//this error is fullfiled promise (404) as it was not found but we got this result
+//to handel new Error - it stops/rejects promise and propagates down to nearest catch block
+const renderError= function(msg){
+    countriesContainer.insertAdjacentText("beforeend",msg);
+    
+}
+const getJSON= function(url,errorMsg){
+    return fetch(url).then(response=>{
+        if(!response.ok) throw new Error(`${errorMsg} (${response.status})`);
+        return response.json();
+    })
+}
+
+const getCountryData= function(country){
+    //country 1
+    getJSON(`https://countries-api-836d.onrender.com/countries/name/${country}`,`Country not found , 404 `)
+    .then((data)=>{
+        renderCountry(data[0]);
+        const neighbour = "";//data[0].borders[0];
+
+        if(!neighbour)throw new Error(`no neighbour found`);
+        //country 2
+        
+        return getJSON(`https://countries-api-836d.onrender.com/countries/alpha/${neighbour}`);
+    })
+    .then(data=>renderCountry(data,"neighbour"))
+    .catch(err=> {
+            //console.error(`boom ${err}`);
+            renderError(`Something went wrong, ${err}`)
+    })
+    .finally(function(){
+        countriesContainer.style.opacity = 1;
+    });
+};
+btn.addEventListener("click",function(){
+    console.log("hi");
+    getCountryData("portugal");
+})
+
+
+////////////////////////////////////////////////////////////////////////////
+//js run time - 1. js engine 2. web APIs 3. Callback queue
+//1. js engine (heap- where object is stored in memory + call stack - where code is actually executed)
+//2. web apis like dom, timers, fetch api, geolocation api
+//3. call back queue like load,timer,click,data
+//call back queue are ready to be executed callback functions(coming from events), whenever call stack gets empty these go to call stack and start there work
+// asynchronous task will run in web APIs environment - like loading an image, even the event listner code will run in web apis environment
+//when image gets loaded , it goes to call back queue , to wait for call stack to get free
+//but lets say timer of 5 sec, but some are already present in callback queue- then it might run after 6 or 7 second, it just guarentees that it woont run before 5 second
+//if there is only one thread of execution in the engine then it can't multi task , so we use event loop
+//event loop looks into call stack  check if its completely empty apart from global execution context
+//if empty - take 1st call back from call back queue and place it in call stack to be executed - this event is called an event loop tick
+//event loop does coordination between call back queue and call stack 
+//js language has no sense of time, as asynchronous stuff does not happen in engine but web apis environment and callback queue, and event loop decides which code to send next, engine just executes the stuff
+//promise works a bit different
+//.then or promise part does not go t callback queue but micro task queue, which has priority over call back queue
+//micro task queue can starve call back queue (though generally it doesnt happen)
+//so never use js for high precesion time task
+
+console.log("test start");
+
+setTimeout(() => {
+    console.log("0 sec timer");
+}, 0);
+Promise.resolve("RESOLVED PROMISE 1").then(res=>console.log(res));
+Promise.resolve("RESOLVED PROMISE 2").then(res=>{
+    for(let i=0;i<1000000000;i++){};//to delay 0 sec timer
+    console.log(res);
+});
+console.log("test end");
+//otuput
+// test start
+// test end
+// RESOLVED PROMISE 1
+// RESOLVED PROMISE 2
+// 0 sec timer
+
+//BETTER way to consume promise , async/await
+//async makes await possible, and await returns a promise, and block the code, till that promise is resolved
+//it syntactic sugar over then method, instead of then just use await in front of promise
+//returning from async function
+cosnt whereami = async function(country){
+  const x=fetch(argt);
+  return x;
+}
+(async function(){
+  try{                  //result of promise/ then
+    console.log(x);
+  }
+catch(err){             //catch
+  console.error(err);
+}
+console.log("done");   //finally
+})//iffy function
+
+//instead of consuming promises by then, async await is preferd
+
+//promise combinator - promise all/race/allsettled/any - recieves array of promises and returns a promise
+
+const get3Countries = async function(c1,c2,c3){
+    try{
+        const data = await Promise.all( //run promise in parallel
+            [getJSON(`https://restcountries.com/v3.1/name/${c1}`), 
+            getJSON(`https://restcountries.com/v3.1/name/${c2}`),
+            getJSON(`https://restcountries.com/v3.1/name/${c3}`)]
+        )
+        console.log( data.map(d=>d[0].capital));
+        //why would we wait for 1 country and then start loading another
+
+    }catch(err){
+        console.error(err);
+    }
+}
+get3Countries("india","usa","australia");
+
+//promise.race  - the one which wins the race, will be fullfilled promise or will be the returned promise
+//promise.all - returns error as soon as 1 of them rejects
+//promise.allsettled - never shortcuircits - when all done return all results of all promises
+//promise.any - return 1st fullfilled promise (ignores rejected promise,simialar to race but race shows errors if reject happens 1st)
+
+
+
+
+
+
+/////////////////////////////////////////////////
+earlier multiple scripts but now
+we divide project into multiple modules (3rd party modules are called package(npm - node package manager is a place where many packages are present and we use it to get and use different packages))
+npm is both a software in itself and a repository
+at the end everything combined - javascript bundle 
+1. modules
+2. (bundling - since not all browser supports modules, it compresses and optimizes stuff, better for performance)
+3. (transpiling and polyfiling - convert modern js back to ES5 (so that older browsers can run new stuf))
+4. javascript bundle
+
+web pack or parcel or babel - does step 2 and 3
+(npm can be used to install these -parcel, live server, babel, web pack and many more)
+
+Modern JavaScript Workflow
+Write Modular Code: Use import/export syntax to write maintainable and reusable code.
+Install Dependencies: Use NPM to install required packages, including bundlers, transpilers, and polyfills.
+Configure Bundler:
+Use Webpack/Parcel to:
+Combine modules into a single or optimized bundle.
+Compress and optimize code for better performance.
+Use Babel for transpiling and polyfilling.
+Generate Bundle: Output the final JavaScript file(s) that can run in all target browsers.
+Deploy: Upload the bundle to your server for production use.
+
+overview of modules
+module- reusable piece of code that encapsulates implementation details
+usually  a standalone file, but doesnt have to be and uses imports and exports (can be variables or functions)
+when we export something that's called public api
+that public api is consumed by import, other module from which we import are called dependency of importing module
+helps for abstraction, simplicity, isolation, reuse, privacy
+variables are private in a module by default, but in a script every variable is global to its below code
+by default strict mode, sloppy mode
+top level this undefined , window
+import and export (can only happen at top level, outside any block) yes, no
+html link <script type="module">, <script>
+file download asynchronous, synchronous(unless we use async or some tag)
+parsing a code say main.js -> importing modules execute before execution of main.js that is modules are imported synchronously
+why synchronous, because it makes bundling and dead code elimination easier, many a times we only need a small part of packeage, so it is better to no its dependecy before hand
+importing happens synchronously while parsing happens but downloading of modules asynchronously but befoer main.js starts executing
+linking imports to main.js
+imprted values are live not copies
+
+in short 1st parse, each import happens synchronousely (download happens asynchronously), the dependencies/exporting modules are executed at the end the importing module gets executed, though not necessary we write import statement first
+//types of export 1.named and 2.default export
+
+and variables and functions should be at top level
+export const fun1 = function(){cl("hi")} // ok
+if(true){export const fun1 = function(){cl("hi")}} // will fail as not at top level, inside a block
+export {var1,var2};
+
+import {fun1 as fun, var1, var2 as price} from "./abc.js"  //{same name}
+//or
+import * as abc as "./abc.js" // to import everything
+
+//above was named export
+
+//default export - but only use 1 default export per module 
+export dafault function(prod,qty){dsfg;cl{sf);} // it ahs no name so any name can be taken while importing
+import add,{ fun1 as fun, var1, var2 as price } from "./abc.js";
+var1=5;
+fun1()// var1=var1*2;
+import {var1} from "./abc.js";//-> var1 will be equal to 10, which shows that these stuffs are not copy but live connection
+//in modules top level await works - do remember await will block the module till its completed, + it will block its dependent module
+
+//module pattern
+main goal of module pattern is to encapsulate functionality, to have private data, and give public api
+//usually we use iffy - so that we dont have to call it seperately and its only called once
+const shoppingCart2=(function(){
+//all of these are private
+  const cart = [];
+  const shippingCost = 10;
+  fun1(){};
+  return{cart,fun1(),addToCart};
+})();
+shoppingCart2.addToCart("apple",2);
+shoppingCart2.addToCart("mango",5);
+console.log(shoppingCart2);//works due to clousers, allows to access stuff at its birth place, thus add to cart works as it still exist even though it's birth place vanished
+console.log(shoppingCart2.shippingCost);//fails as not returnedd
+besides es6 modules (but will have to keep notice of sequence and module bundler doesnt work so->)native es6 module and module pattern - amd modules and common js modules (uses external implementation)
+//common js modules -used to run in node js which helps to run server outside of browser
+// originally npm was repository for only node, later became standard, thus various common module stuck till now
+export.addToCart = function(){}// -> will not work in browser
+//import
+const {addToCart}= require("./abc.js");
+
+
+
+
+ 
+//npm - node program manager
+//both a software and a repository
+//why we need to manage packages or dependencies in project
+//earlier using script tag we include external libraries - like leaflet
+//but will create problem 1. html loads all js, 2. download a version in local if new comes re download and changes in file
+import  cloneDeep  from "./node_modules/lodash-es/cloneDeep.js";
+console.log("hi");
+const state = {
+    cart: [
+        {product:"Pizza", quantity: 10},
+        {product:"Burger", quantity: 20},
+    ],
+    user: {loggedIn: true}
+};
+
+const stateClone = Object.assign({},state);
+const stateDeepClone = cloneDeep(state);
+state.user.loggedIn=false;
+console.log(stateClone);
+console.log(stateDeepClone);
+
+
+//BUNDLING WITH PARCEL
+npm -i parcel --save-dev // dev dependency is a tool that we need to build our application not a dependency that we include in our project/code
+                                  dist - folder contains bundle - a different html and script
+//currently extra stuff has not been deleted or compressed
+any change wont reload stuff/ state remains same, but directly inject changes into web page
+
+parcel is a cmd line interface
+doesnt work with local installation, so use npx = apploication build into npm
+npx parcel index.html 
+  or by script
+in package.json
+"scripts":{
+  "start": "parcel index.html",
+  "build": "parcel build index.html"
+}
+//in cmd
+npm run start
+npm run build
+after build its compressed 
+
+npm -i parcel -g //for global installation, but people use local to stay uptodate
+                                  
+//configure babel and polyfilling
+//you can see after start or build let changed to var and similar changes es6->es5
+//parcel make default babel decision - though we can choose which of es5 browsers we should support
+babel work with plugins (preset bunch of plugins - which of the plugins/feature should support) 
+promise or .find cant be transpiled(converted from es6->es5) unlike arrow operator or let (fun() or var) by babel 
+so we pollyfill them -> import "core-js/stable" 
+OR IF you want to pollyfill only a particular module, say in array find method
+import "core-js/stable/array/find" 
+pollyfill recreate promise or . find so that they can work in es5
+
+2 PARADIGMS OR WAY OF WRITING CODE
+1. IMPERATIVE CODE(how to do things/step by step)   2.DECLARATIVE CODE(only what to do (steps get abstracted))
+                                const arr= [2,4,6,7]
+const arrDouble = []                                     const arrDouble=arr.map(n=>n*2) //just describing what to do
+  for(let i=0;i<4;i++)double[i]=2*arr[i]
+
+2.1 functional paradigm - a type of declarative program based on pure function avoiding side effect of mutating data(be it variable or dom changes, or logging )
+in FP - immutability - state/data is never modified, if want make a copy and work
