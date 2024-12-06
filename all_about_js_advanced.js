@@ -2097,5 +2097,12 @@ pollyfill recreate promise or . find so that they can work in es5
 const arrDouble = []                                     const arrDouble=arr.map(n=>n*2) //just describing what to do
   for(let i=0;i<4;i++)double[i]=2*arr[i]
 
-2.1 functional paradigm - a type of declarative program based on pure function avoiding side effect of mutating data(be it variable or dom changes, or logging )
-in FP - immutability - state/data is never modified, if want make a copy and work
+2.1 functional paradigm - a type of declarative program based on pure function avoiding side effect of mutating data(be it variable or dom changes, or console.log, etc )
+in FP - immutability - state/data is never modified, if want make a copy and modify that.
+in pure function pass all the needed data, so it wont need to acess stuff from outside and returning a copy will also be possible
+
+//in js to make object immutable
+const abc =  Object.freez({jhon:100,mary:200,});//freezed
+abc.jay=100;//no change
+
+but obj.freez only freez 1st level not object inside object, abc[0].jay=100 will work
