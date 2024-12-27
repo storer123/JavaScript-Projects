@@ -2106,3 +2106,17 @@ const abc =  Object.freez({jhon:100,mary:200,});//freezed
 abc.jay=100;//no change
 
 but obj.freez only freez 1st level not object inside object, abc[0].jay=100 will work
+
+
+
+// garbage collection
+in call stack when Execution context gets poped out , all the primitive variables gets vanished with them , (so global variables will never be deleted)
+
+in heap - garbage collection, central memory management by engine ,  we developers cant control when it deletes stuffs
+how? using mark and sweep algorithm -> mark alive once and sweep  unalive once
+objects/array/function ->  references are stored in heap
+                                  root -> global execution context/ event listners/ clousers ,  and then check for references that can be reached , which are alive
+if something cant be reached from any of the root they are dead and removed from memory
+                                  memory leaks -  when object are no longer needed but incorrectly alive (cant be sweeped - generally due to timers or event listners , so delete them after use)
+
+                                  
