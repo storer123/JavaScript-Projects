@@ -2120,3 +2120,31 @@ if something cant be reached from any of the root they are dead and removed from
                                   memory leaks -  when object are no longer needed but incorrectly alive (cant be sweeped - generally due to timers or event listners , so delete them after use)
 
                                   
+///////////////////////////////////////
+MVC Architecture
+
+why architecture
+provides *structure* to code (more organized)
+provides easier *maintainablity* and *expandablity*
+
+for big project instead of our own we use mvc, mpc, flux or some standard architecture
+model, view , controller
+
+components of architecture
+1. business logic (what businesses solve or do, like for whatsapp sending and recieving message, for ai1 its transaction)
+2. state (stores all data about application, its single source of truth kept in sync with ui, use redux or mobx to manage it as its hard)
+3. http library (making and recieving ajax request)
+4.  application logic (router) (concern with implementation of application itself - handles navigation ,ui events , etc)
+5. presentation logic (ui layer) (concerned about visible part of application - displays application state by keeping in sync with the state component)
+  
+                                  
+CONTROLLER - (SEPERATES MODEL AND VIEW , WITHOUT THEM KNOWING OF EACH OTHER, IS LIKE A BRIDGE B/W THEM)
+only controller calls function or imports from model or view and not the other way around
+model and view are stand alone, they dont even know controller exists, they just sit and wait for instructions from controller
+(WEB<->)MODEL   |   CONTROLLER          | VIEW     (  -> USER  )          
+BUSINESS LOGIC  | APPLICATION LOGIC     | PRESENTATION LOGIC
+STATE           |                       |
+HTTP LIBRARY    |
+  
+LET SAY A CLICK HAPPENS FROM USER SIDE - CONTOLLER HANDLES IT (LIKE UPDATING UI OR ASK MODEL FOR DATA) OR DISPATCH TASK FOR MODEL AND VIEW
+IF CONTROLLER ASK FOR DATA FROM MODEL AJAX REQUEST TO WEB HAPPENS AND THEN sends data TO CONTROLLER AND THEN TO VIEW
