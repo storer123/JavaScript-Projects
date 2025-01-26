@@ -11,9 +11,6 @@
 //             - after development during production ,bable to transpile and polyfill code - since users browser might not be up to date, and forward compatiblity is required
 // JSON - JavaScript Object Notation - light weight data-interchange format, 
 //                                  easy for humans to read and write , and for machine to parse 
-//                                     
-// doesnt accept single quote
-
 // not hard and fast rule but script if inline below style, if seperate then at the end of body
 //cmd+k to clear terminal
 // how to run on browser
@@ -63,20 +60,25 @@ console.log("namaste duniya");
 console.warn("warning");
 console.error("error");
 console.assert(4 == (6 - 4))
-console.assert(4 == (6 - 2))
+console.assert(4 == (6 - 2))//assertion failed
 console.clear();
-console.log("hi ", 4 + 3, "bye");
+console.log("hi ", 4 + 3, "bye");//in single line
+document.write("This is my document"); writes the string "This is my document" to the webpage. Depending on when it is called, it will either:
+Inject the content into the document during load.
+Replace all existing content if called after the page has loaded.
+ instead
+document.body.innerHTML = "This is my document";
+or , document.body.textContent = "This is my document";
+Security Risks: If the input to document.write() is user-controlled, it can lead to Cross-Site Scripting (XSS) vulnerabilities.
 // class ek se zyada element mai, id sirf ek element mai 
-document.write("this is my document");
-
 //2. javascript variables - containers to store data value
 //variables can't start with numbers,reserved keywords(exception - name works even though reserved),special characted, , only _ a-z A-Z $ 
 // variable names -> all upper case for constant PI, else camelCase, should be descriptive and self explanatory like job1, job2 bad firstJob, secondJob good
 var number1=34
-//2 data types in js - primitive or object
-// js has dynamic typing - no need to explicitly or manually write datatype ,can be done automatically , why? since in js value has type not the variable
+//2 data types in js - primitive ,non-primitive or object
+// js has dynamic typing - no need to explicitly or manually write datatype ,can be done automatically , why? since in js value has type not the variable, for issue people use typescript
 //use x=10, later x="drg" -> good but hard to find bug
-//primitive 7 types - bool,symbol,string,undefined,null,number,bigint 
+//primitive 7 types - bool, symbol, string, undefined, null, number, bigint 
 //number - decimals or integers
 // NaN - not a number, typeof NaN = number, Number("jhon")= NaN
 // white value in console is string and other color like purple is number
