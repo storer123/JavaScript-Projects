@@ -63,18 +63,18 @@ console.assert(4 == (6 - 4))
 console.assert(4 == (6 - 2))//assertion failed
 console.clear();
 console.log("hi ", 4 + 3, "bye");//in single line
-document.write("This is my document"); writes the string "This is my document" to the webpage. Depending on when it is called, it will either:
-Inject the content into the document during load.
-Replace all existing content if called after the page has loaded.
- instead
-document.body.innerHTML = "This is my document";
-or , document.body.textContent = "This is my document";
-Security Risks: If the input to document.write() is user-controlled, it can lead to Cross-Site Scripting (XSS) vulnerabilities.
+day=prompt("enter a valid day"); 
+document.write("This is my document"); //writes the string "This is my document" to the webpage. Depending on when it is called, it will either:
+//Inject the content into the document during load.
+//Replace all existing content if called after the page has loaded.
+//instead
+document.body.innerHTML = "This is my document";//or , 
+document.body.textContent = "This is my document";
+//Security Risks: If the input to document.write() is user-controlled, it can lead to Cross-Site Scripting (XSS) vulnerabilities.
 // class ek se zyada element mai, id sirf ek element mai 
 //2. javascript variables - containers to store data value
 //variables can't start with numbers,reserved keywords(exception - name works even though reserved),special characted, , only _ a-z A-Z $ 
 // variable names -> all upper case for constant PI, else camelCase, should be descriptive and self explanatory like job1, job2 bad firstJob, secondJob good
-var number1=34
 //2 data types in js - primitive ,non-primitive or object
 // js has dynamic typing - no need to explicitly or manually write datatype ,can be done automatically , why? since in js value has type not the variable, for issue people use typescript
 //use x=10, later x="drg" -> good but hard to find bug
@@ -97,10 +97,10 @@ let fullAge = true;
 
 //undefined - value taken by variable not defined
 let children;
-
+console.log(typeof children);//undefined
 // symbol - value that is unique and cannot be changed
 
-//bigint - so large that no.cant handel
+//bigint - so large that number can't handel
 
 console.log(typeof 'hi');// string
 console.log(typeof true);// boolean
@@ -113,10 +113,10 @@ var marks = {
     har : 34.34
 }
 console.log(marks);
-// Object (jenerates a key-value, or key-property pair)
+// Object (generates a key-value, or key-property pair)
 //in arr [1,2,[3,4,5]] how we dont have name for each stuff, obj is more dynamic and semantic
-//obj literal syntax
-const mark = {
+//obj literal syntax - A specific syntax to define objects directly using {}.
+const mark = { //this , using {} is object literal/specific syntax, apart from that, new Object()(constructor), object.name="john" or using class or obj.create() (proto)
   name: "evans",
   age:1923-1913,
   trophies : [1,2,3]
@@ -125,10 +125,24 @@ const mark = {
   fun : function (x) {
    return this.age+x;
   }
+ or
+ fun(x) {
+   return this.age+x;
+  }
 }
 //in object unlike array , order of stuffs does not matter
 // for ordered data use array , else use object
-//they order themself alphabetically
+//object order themself based on key numeric or not
+const obj = {
+  zebra: "animal",
+  age: 23,
+  3: "third",
+  1: "first",
+};
+console.log(obj);
+// Output: {1: "first", 3: "third", zebra: "animal", age: 23}
+Numeric string keys ("1" and "3") come first in ascending order.
+Non-numeric keys ("zebra" and "age") follow in insertion order.
 
 // to get data from object
 . notation
@@ -140,7 +154,7 @@ mark["na"+x];||mark.name
 
 or
 
-const proper = promt ("what property do you want to know?");//namer
+const proper = promt ("what property do you want to know?");//name
 mark.proper//error
 mark[proper]// evans
 
@@ -170,9 +184,8 @@ console.log(n)
 var arr = [1,2,"hi",4,5]
 console.log(arr)
 console.log(arr[0])
-console.clear();
 const arra=["hg"]
-arra[0]="ko"  // can be changed even though const , since only primitive value are immutable
+arra[0]="ko"  // can be changed even though const , since only primitive value are immutable or for object arra points to a place which is mutable that is values of inside can be changed even though constant but its value/where it is pointing cant be changed
 // but cant change its structure
 arra=["hu","hh"] //error, will not work if const
 
@@ -227,11 +240,10 @@ console.log(boolValue); // true
 //String and Number:
 let result = "5" + 1; // Implicitly converts number to string
 console.log(result); // "51" (string concatenation)
-let result = "5" - 1; // Implicitly converts string TO NUMBER   SAME FOR * AND /
+let result = "5" - 1;//4 // Implicitly converts string TO NUMBER   SAME FOR * AND /
 2+3+5+'5' ===== '95'
 '10'-'4' == 6
 10-11-'2'+'3' === '-33'
-console.log(result); // 4 (string concatenation)
 //Boolean in Arithmetic Context:
 let sum = 5 + true; // true is coerced to 1
 console.log(sum); // 6
@@ -240,15 +252,16 @@ console.log("2" == 2); // true, because "2" is coerced to a number
 console.log("2" === 2); // false, no coercion, types must match
 
 //4.4 falsey and truthly
-falsley :  false, 0 ,NaN, ''(EMPTY STRING), null, undefined , //after conversion these change to false all others true , all 
+falsley :  false, 0 ,NaN, ''(EMPTY STRING), null, undefined , //after conversion these change to false all others true 
 even empty obj Boolean({})====true (since not included in above)
 
 // 5 function
-// use let if you want to reassign else use const
+// use let if you want to reassign a new function else use const
 
 
 //5.0 strict mode 
-/*Using "use strict"; is a best practice that can help you write cleaner, more robust, and more maintainable JavaScript code by enforcing stricter parsing and error handling on your code. It’s generally recommended to use strict mode, especially in larger codebases or when working in teams.*/
+/*Using "use strict"; is a best practice that can help you write cleaner, more robust, and more maintainable JavaScript code by enforcing stricter parsing and error handling on your code. 
+It’s generally recommended to use strict mode, especially in larger codebases or when working in teams.*/
 Catches Errors: Converts silent errors into throw errors, making bugs easier to spot.
 
 Prevents Globals: Disallows accidental creation of global variables by throwing errors for undeclared variables.
@@ -274,17 +287,12 @@ const Avg = function(a,b=3){
 }
 
 //or arrow function (also a function expression)   // in arrow function no need to write "function"
-const Avg = (a,b) => (a+b)/2; // in 1 liner no need of braces 
-console.log(Avg(2,3));
-VM3090:1 2.5
-
-
-c1=Avg(2);
-console.log(c1);
+const Avg = (a,b) => (a+b)/2; // in 1 liner no need of braces will return whatever inside.
+console.log(Avg(2,3)); 2.5
 
 let x =3
-console.log(x);
-console.log(3);
+console.log(x);//number
+console.log(3);//number
 console.log("3");
 
 // 6 conditionals in js
@@ -297,7 +305,7 @@ else console.log("hui");
 let day='monday'
 
 switch{
-    case 'monday: // day=== monday (strict)
+    case 'monday': // day=== monday (strict)
         console.log("hi");                    // since no break next case statement will also print
     case 'tue':
         console.log("hello");
@@ -333,14 +341,14 @@ let myarr = ["Fan","Cam", 34, null, true];
 console.log(myarr.length);
 myarr.pop();//from back
 myarr.push("hi");
-myarr.include("hi");
+myarr.include("hi");//ha ya na
 myarr.indexOf("hi");
 myarr.shift();//pop from front
-console.log(myarr);
+.findLast()//-> last that follows , this and below filters based on callback function
+.findLastIndex() //-> last index that follows
 myarr.unshift("hy");//add from front
-console.log(myarr);
 let st=myarr.toString();
-console.log(st);
+console.log(st); Fan,Cam,34,,true//string seperated by space
 myarr.sort();// by default using sort, dictionary type
 console.log(myarr);
 
@@ -382,8 +390,9 @@ const capitalize = function (name){
 //padding
 let message = "hi, how are you";
 console.log(message.padStart(25,"+").padEnd(35,"-"))// make padding so that total length of string is 25, and pad with a "+", and 10 "-" as 25 already done
+++++++++++hi, how are you----------
 //repeat
-message.repeat(3)//message will be repeated 3 times
+message.repeat(3)//message will be repeated 3 times, 'hi, how are youhi, how are youhi, how are you'
 
 
 //10 date and there methods in js
@@ -395,6 +404,12 @@ console.log(mydate.getDay());
 console.log(mydate.getHours());
 console.log(mydate.getMinutes());
 
+/*Mon Jan 27 2025 00:42:58 GMT+0530 (India Standard Time)
+ 1737918778090
+ 2025
+ 1
+ 0
+ 42*/
 //11 DOM manipulatin (document object model)
 //(API) application programming interface provided by browsers that allows JavaScript to interact with the HTML and XML documents. and manipulate them.
 //methods , ancestors ,html docs, etc
@@ -651,17 +666,17 @@ localStorage.clear();
 
 //15 json
 obj={name:"harry",length:1}
-jso=JSON.stringify(obj);
-console.log(typeof jso);
-console.log(jso);
-parsed=JSON.parse( jso)
+jso=JSON.stringify(obj);//obj->string
+console.log(typeof jso);//string
+console.log(jso);//{"name":"harry","length":1}
+parsed=JSON.parse( jso)//string->obj
 console.log(parsed);
 
 
 
 ////////////////////
 //16 . behindTheScene of js
-// earlier was and interpreter lang, now just-in-time compilation->  interpreter slow, compilation makes a portable object code for machine code, which can be executed any where,  jtc - enable to compile and run immediately , without making any portable file
+// earlier was and interpreter lang, now just-in-time compilation (jtc)->  interpreter slow, compilation makes a portable object code for machine code, which can be executed any where,  jtc - enable to compile and run immediately , without making any portable file (compiled code is most optimized and thus is faster)
 // jit compilation i.e. conversion to machine code happens inside the engince, ex- for google chrome - v8 engine
 //js runtime in browser - consist of 1.engine consist of 2 parts - 1.1 call stack 1.2 heap, but they alone are not enough , even 2. API's are needed like dom, fetch, timer,  3. callback queue like 3.1 click (a call back functiopn from dom event listner) 3.2 timer 3.3 data when call back queue stuff is called it goes to call stack -> this happens using event loop 
 // high level - cant access resources like memory directly, is human understandable
@@ -834,9 +849,3 @@ both me and meCopy family got changed
 
 //deep copy
 //will do using external library later
-
-/*
-
-Finally, before dismissing an employee, the employer has to hold disciplinary
-proceedings (domestic enquiry) in a proper way. In case of discharge, he may
-or may not go for it.*/
