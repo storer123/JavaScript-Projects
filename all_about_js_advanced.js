@@ -1587,6 +1587,8 @@ const maxSlide= slides.length;
 
 
 
+
+
 const gotoSlide = function(slide){
   slides.forEach(
     (s,i)=> s.style.transform = `translateX(${100 * (i-slide) }%)`);
@@ -2148,3 +2150,10 @@ HTTP LIBRARY    |
   
 LET SAY A CLICK HAPPENS FROM USER SIDE - CONTOLLER HANDLES IT (LIKE UPDATING UI OR ASK MODEL FOR DATA) OR DISPATCH TASK FOR MODEL AND VIEW
 IF CONTROLLER ASK FOR DATA FROM MODEL AJAX REQUEST TO WEB HAPPENS AND THEN sends data TO CONTROLLER AND THEN TO VIEW
+
+//to do
+//find, findLast, findLast Index, Object.groupBy(arr/obj, callback function);
+//reverse-destructive, toReversed - non destructive === .slice().reverse()
+//similarly - toSpliced, toSorted() same as original but non destructive
+//mov[1]=2000 vs newMov = mov.with(1,2000) (ind,val)
+//async await challenges
