@@ -23,6 +23,26 @@ cmd+opt+j or inspect->console or ctr+shift+j or view -> developer-> js console
 ctr+tab, to reverse press it together with shift
 //to change applications
 cmd+tab , to reverse shift as well , shift can also be denoted as up arrow
+//jsDoc comment with various parameters - a standard practive, appears throughout the project wherever function is present
+ /**
+     * render the recieved object to the dom
+     * @param {Object | Object[]} data The data to be rendered (e.g. recipe)
+     * @param {boolean} [render = true] if false create markup string instead of rendering to DOM
+     * @returns {undefined | string} a markup string is returned if render=false
+     * @this {Object} View instance
+     * @author Prafulla
+     * @todo Enhance the whole project and add this type of documentation/JSDOC COMMENT
+     */
+    render(data, render=true){
+        //console.log("this si fractionn ",Fraction);
+        if(!data || (Array.isArray(data) && data.length === 0))return this.renderError();
+        
+        this._data=data;
+        const markup = this._generateMarkup();
+        if(!render)return markup;
+        this._clear();
+        this._parentElement.insertAdjacentHTML("afterbegin",markup);
+    }
 
 // expression is a piece if cide that produces a value
 a>=b?"yes":"no";
