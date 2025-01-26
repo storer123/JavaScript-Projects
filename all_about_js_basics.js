@@ -44,7 +44,7 @@ cmd+tab , to reverse shift as well , shift can also be denoted as up arrow
         this._parentElement.insertAdjacentHTML("afterbegin",markup);
     }
 
-// expression is a piece if cide that produces a value
+// expression is a piece of code that produces a value
 a>=b?"yes":"no";
 3+4
 a&&b
@@ -64,9 +64,8 @@ console.warn("warning");
 console.error("error");
 console.assert(4 == (6 - 4))
 console.assert(4 == (6 - 2))
-//console.clear();
+console.clear();
 console.log("hi ", 4 + 3, "bye");
-//alert("me")
 // class ek se zyada element mai, id sirf ek element mai 
 document.write("this is my document");
 
